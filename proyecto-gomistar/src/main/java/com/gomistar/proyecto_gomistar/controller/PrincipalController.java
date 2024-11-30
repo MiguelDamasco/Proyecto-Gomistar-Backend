@@ -62,7 +62,7 @@ public class PrincipalController {
     public String saludoSeguro() {
         return "Hola desde un lugar seguro!";
     }
-
+/* 
     @PostMapping("/crear_empleado")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createEmployee(@RequestBody CreateEmployeeDTO employee) {
@@ -73,8 +73,8 @@ public class PrincipalController {
         this.employeeService.addEmployee(myEmployee);
 
         return ResponseEntity.ok(myEmployee);
-    }
-
+    } */
+  
     @PostMapping("/añadir_empleado")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addEmployee(@RequestParam String idEmployee, @RequestParam String idUser) {

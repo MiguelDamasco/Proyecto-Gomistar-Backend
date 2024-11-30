@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.gomistar.proyecto_gomistar.DTO.request.AddEmployeeToUserDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.CreateEmployeeDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.ResponseGetEmployeeDTO;
 import com.gomistar.proyecto_gomistar.model.EmployeeEntity;
 import com.gomistar.proyecto_gomistar.repository.EmployeeRepository;
@@ -33,6 +35,26 @@ public class EmployeeService {
                                       .employeeEntity(null)
                                       .message("Error, no se ha encontrado al empleado")
                                       .build());
+    }
+
+
+    public EmployeeEntity saveEmployee(CreateEmployeeDTO pEmployee) {
+
+        EmployeeEntity myEmployee = EmployeeEntity.builder().name(pEmployee.name())
+                                                            .lastName(pEmployee.lastname())
+                                                            .build();
+
+        return this.employeeRepository.save(myEmployee);
+    }
+
+
+    public EmployeeEntity saveEmployee(AddEmployeeToUserDTO pDto) {
+
+        EmployeeEntity myEmployee = EmployeeEntity.builder().name(pDto.name())
+                                                            .lastName(pDto.lastname())
+                                                            .build();
+
+        return this.employeeRepository.save(myEmployee);
     }
 
 
