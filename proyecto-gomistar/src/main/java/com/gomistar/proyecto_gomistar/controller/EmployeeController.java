@@ -1,10 +1,11 @@
 package com.gomistar.proyecto_gomistar.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,6 @@ import com.gomistar.proyecto_gomistar.DTO.request.CreateEmployeeDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.EmployeeDTOModify;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponseOne;
-import com.gomistar.proyecto_gomistar.DTO.response.ResponseGetEmployeeDTO;
 import com.gomistar.proyecto_gomistar.model.EmployeeEntity;
 import com.gomistar.proyecto_gomistar.service.EmployeeService;
 
@@ -30,17 +30,30 @@ public class EmployeeController {
         this.employeeService = pEmployeeService;
     }
 
+    @GetMapping("/findAll")
+    public ResponseEntity<?> getAllEmployee() {
 
-    @GetMapping("/list")
-    public ResponseEntity<?> getEmployee(@RequestParam String id) {
+        List<EmployeeEntity> employeeList = this.employeeService.getAllEmployee();
+        ApiResponse<List<EmployeeEntity>> response = new ApiResponse<>(
+            "Lista de todos los empleados",
+            employeeList
+        );
 
-        ResponseGetEmployeeDTO response = this.employeeService.getEmployee(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
-        if(response.getEmployeeEntity() != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    @GetMapping("/find")
+    public ResponseEntity<?> getEmployee(@RequestParam String pId) {
+
+        EmployeeEntity myEmployee = this.employeeService.getEmployee(pId);
+        ApiResponse<EmployeeEntity> response = new ApiResponse<>(
+            "Empleadon encontrado!",
+            myEmployee
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 
     @PostMapping("/create")

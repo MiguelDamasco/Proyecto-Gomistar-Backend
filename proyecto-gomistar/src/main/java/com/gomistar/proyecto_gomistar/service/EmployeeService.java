@@ -1,5 +1,6 @@
 package com.gomistar.proyecto_gomistar.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -7,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.gomistar.proyecto_gomistar.DTO.request.AddEmployeeToUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.CreateEmployeeDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.EmployeeDTOModify;
-import com.gomistar.proyecto_gomistar.DTO.response.ResponseGetEmployeeDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
 import com.gomistar.proyecto_gomistar.model.EmployeeEntity;
 import com.gomistar.proyecto_gomistar.repository.EmployeeRepository;
@@ -42,23 +42,23 @@ public class EmployeeService {
 
         return myEMployee;
     }
+    
+    public EmployeeEntity getEmployee(String pId) {
 
-    public ResponseGetEmployeeDTO getEmployee(String id) {
+        Optional<EmployeeEntity> myEmployeeOptional = this.employeeRepository.findById(Long.parseLong(pId));
 
-        Optional<EmployeeEntity> myEmployee = this.employeeRepository.findById(Long.parseLong(id));
+        if(!myEmployeeOptional.isPresent()) {
+            throw new RequestException("P-280", "El empleado que buscas no existe");
+        }
 
-        return myEmployee.map(employee -> 
-                ResponseGetEmployeeDTO.builder()
-                                      .employeeEntity(employee)
-                                      .message("Empleado encontrado!")
-                                      .build())
-                         .orElseGet(() -> 
-                ResponseGetEmployeeDTO.builder()
-                                      .employeeEntity(null)
-                                      .message("Error, no se ha encontrado al empleado")
-                                      .build());
+        return myEmployeeOptional.get();
     }
 
+
+    public List<EmployeeEntity> getAllEmployee() {
+
+        return (List<EmployeeEntity>) this.employeeRepository.findAll();
+    }
 
     public EmployeeEntity saveEmployee(CreateEmployeeDTO pEmployee) {
 
