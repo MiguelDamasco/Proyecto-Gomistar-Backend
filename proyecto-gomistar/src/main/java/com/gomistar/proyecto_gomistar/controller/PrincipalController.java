@@ -74,7 +74,7 @@ public class PrincipalController {
 
         return ResponseEntity.ok(myEmployee);
     } */
-  
+  /* 
     @PostMapping("/añadir_empleado")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addEmployee(@RequestParam String idEmployee, @RequestParam String idUser) {
@@ -92,7 +92,7 @@ public class PrincipalController {
         }
         return (ResponseEntity<?>) ResponseEntity.badRequest();
     }
-
+*/
     @PostMapping("/crear")
     public ResponseEntity<?> createuser(@Valid @RequestBody CreateUserDTO userDTO) {
 

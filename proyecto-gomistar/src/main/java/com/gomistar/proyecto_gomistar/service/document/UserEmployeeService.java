@@ -4,7 +4,9 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.gomistar.proyecto_gomistar.DTO.request.AddEmployeeToUserDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
+import com.gomistar.proyecto_gomistar.model.EmployeeEntity;
 import com.gomistar.proyecto_gomistar.model.UserEntity;
 import com.gomistar.proyecto_gomistar.repository.EmployeeRepository;
 import com.gomistar.proyecto_gomistar.repository.UserRepository;
@@ -19,6 +21,25 @@ public class UserEmployeeService {
     public UserEmployeeService(UserRepository pUserRepository, EmployeeRepository pEmployeeRepository) {
         this.userRepository = pUserRepository;
         this.employeeRepository = pEmployeeRepository;
+    }
+
+    public UserEntity addEmployee(AddEmployeeToUserDTO pDTO) {
+        
+        Optional<UserEntity> myUserOptional = this.userRepository.findById(Long.parseLong(pDTO.idUser()));
+
+        if(!myUserOptional.isPresent()) {
+            throw new RequestException("P-223", "El usuario seleccionado no existe");
+        }
+
+        UserEntity myUser = myUserOptional.get();
+
+        EmployeeEntity myEmployee = this.employeeService.saveEmployee(pDTO);
+
+        myUser.setEmployee(myEmployee);
+
+        this.userRepository.save(myUser);
+
+        return myUser;
     }
 
     public void removeEmployee(long pId) {

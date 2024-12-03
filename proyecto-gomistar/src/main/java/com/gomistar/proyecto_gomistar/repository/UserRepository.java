@@ -23,7 +23,7 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
             ON u.employee_id = e.id
             WHERE e.id = :id;
             """, nativeQuery = true)
-    Optional<UserEntity> findByEmployee(@Param("id") long id);
+    Optional<UserEntity> findByEmployee(@Param("id") long pId);
 
    /*  @Query("SELECT u FROM UserEntity u WHERE u.username = ?1")
     Optional<UserEntity> getName(String username);

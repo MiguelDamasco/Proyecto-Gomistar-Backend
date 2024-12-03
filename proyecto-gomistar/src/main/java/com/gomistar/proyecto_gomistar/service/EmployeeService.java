@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.gomistar.proyecto_gomistar.DTO.request.AddEmployeeToUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.CreateEmployeeDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.EmployeeDTOModify;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
@@ -23,6 +22,32 @@ public class EmployeeService {
     public EmployeeService(EmployeeRepository pEmployeeRepository, UserEmployeeService pUserEmployeeService) {
         this.employeeRepository = pEmployeeRepository;
         this.userEmployeeService = pUserEmployeeService;
+    }
+
+    public List<EmployeeEntity> getAllEmployee() {
+
+        return (List<EmployeeEntity>) this.employeeRepository.findAll();
+    }
+
+    public EmployeeEntity getEmployee(String pId) {
+
+        Optional<EmployeeEntity> myEmployeeOptional = this.employeeRepository.findById(Long.parseLong(pId));
+
+        if(!myEmployeeOptional.isPresent()) {
+            throw new RequestException("P-280", "El empleado que buscas no existe");
+        }
+
+        return myEmployeeOptional.get();
+    }
+
+    public EmployeeEntity saveEmployee(CreateEmployeeDTO pEmployee) {
+
+        EmployeeEntity myEmployee = EmployeeEntity.builder().name(pEmployee.name())
+                                                            .lastName(pEmployee.lastname())
+                                                            .isActive(true)
+                                                            .build();
+
+        return this.employeeRepository.save(myEmployee);
     }
 
     public EmployeeEntity modifyEmployee(EmployeeDTOModify pEmployee) {
@@ -43,44 +68,6 @@ public class EmployeeService {
         return myEMployee;
     }
     
-    public EmployeeEntity getEmployee(String pId) {
-
-        Optional<EmployeeEntity> myEmployeeOptional = this.employeeRepository.findById(Long.parseLong(pId));
-
-        if(!myEmployeeOptional.isPresent()) {
-            throw new RequestException("P-280", "El empleado que buscas no existe");
-        }
-
-        return myEmployeeOptional.get();
-    }
-
-
-    public List<EmployeeEntity> getAllEmployee() {
-
-        return (List<EmployeeEntity>) this.employeeRepository.findAll();
-    }
-
-    public EmployeeEntity saveEmployee(CreateEmployeeDTO pEmployee) {
-
-        EmployeeEntity myEmployee = EmployeeEntity.builder().name(pEmployee.name())
-                                                            .lastName(pEmployee.lastname())
-                                                            .isActive(true)
-                                                            .build();
-
-        return this.employeeRepository.save(myEmployee);
-    }
-
-
-    public EmployeeEntity saveEmployee(AddEmployeeToUserDTO pDto) {
-
-        EmployeeEntity myEmployee = EmployeeEntity.builder().name(pDto.name())
-                                                            .lastName(pDto.lastname())
-                                                            .isActive(true)
-                                                            .build();
-
-        return this.employeeRepository.save(myEmployee);
-    }
-
     public EmployeeEntity deleteEmployee(String pId) {
 
         Optional<EmployeeEntity> myEmployeeOptional = this.employeeRepository.findById(Long.parseLong(pId));
@@ -96,15 +83,5 @@ public class EmployeeService {
         this.userEmployeeService.removeEmployee(Long.parseLong(pId));
 
         return myEmployee;
-
     }
-
-    public EmployeeEntity addEmployee(EmployeeEntity employee) {
-        return this.employeeRepository.save(employee);
-    }
-
-    public Optional<EmployeeEntity> findById(Long id) {
-        return this.employeeRepository.findById(id);
-    }
-
 }
