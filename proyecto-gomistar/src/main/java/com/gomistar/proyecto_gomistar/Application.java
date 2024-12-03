@@ -10,6 +10,7 @@ public class Application {
 	public static void main(String[] args) {
 		System.out.println("Contraseña encryptada: " + new BCryptPasswordEncoder().encode("1234"));
 		SpringApplication.run(Application.class, args);
+		System.out.println("Contraseña encryptada: " + new BCryptPasswordEncoder().encode("1234"));
 	}
 
 }

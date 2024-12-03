@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -31,6 +32,9 @@ public class EmployeeEntity {
     private String name;
 
     private String lastName;
+
+    @Column(name = "is_active", columnDefinition = "TINYINT(1)")
+    private boolean isActive;
 
     @OneToMany(mappedBy = "employee", targetEntity = AbstractDocument.class, fetch = FetchType.LAZY)
     private List<AbstractDocument> documents; 
