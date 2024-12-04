@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.gomistar.proyecto_gomistar.model.UserEntity;
+import java.util.List;
+
 
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
@@ -15,6 +17,8 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     Optional<UserEntity> findByUsername(String username);
 
     boolean existsByEmail(String email);
+
+    Optional<UserEntity> findByEmail(String email);
 
     @Query(value = """
             SELECT e.id as employee_id, u.id, u.email, u.password, u.username

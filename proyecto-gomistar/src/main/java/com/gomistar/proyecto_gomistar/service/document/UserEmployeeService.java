@@ -33,8 +33,14 @@ public class UserEmployeeService {
 
         UserEntity myUser = myUserOptional.get();
 
-        EmployeeEntity myEmployee = this.employeeService.saveEmployee(pDTO);
+        EmployeeEntity myEmployee = EmployeeEntity.builder().name(pDTO.name())
+                                                            .lastName(pDTO.lastname())
+                                                            .isActive(true)
+                                                            .build();
 
+                
+        this.employeeRepository.save(myEmployee);
+        
         myUser.setEmployee(myEmployee);
 
         this.userRepository.save(myUser);

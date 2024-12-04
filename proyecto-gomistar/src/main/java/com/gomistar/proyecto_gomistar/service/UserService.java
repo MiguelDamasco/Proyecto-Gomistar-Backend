@@ -17,11 +17,20 @@ public class UserService {
     
     private final UserRepository userRepository;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(UserRepository pUserRepository, BCryptPasswordEncoder pPasswordEncoder) {
+    public UserService(UserRepository pUserRepository) {
         this.userRepository = pUserRepository;
-        this.bCryptPasswordEncoder = pPasswordEncoder;
+    }
+
+    public Long findIdByUsername(String pUsername) {
+
+        Optional<UserEntity> myUserOptional = this.userRepository.findByUsername(pUsername);
+
+        if(!myUserOptional.isPresent()) {
+            throw new RequestException("P-233", "El usuario: " + pUsername + " no existe");
+        }
+
+        return myUserOptional.get().getId();
     }
 
     public boolean existEmail(String pEmail) {
@@ -49,7 +58,8 @@ public class UserService {
             throw new RequestException("p-222", "el email ya existe!");
         }
 
-        String password = this.bCryptPasswordEncoder.encode(pUser.password());
+        BCryptPasswordEncoder passwordEnconder = new BCryptPasswordEncoder();
+        String password = passwordEnconder.encode(pUser.password());
 
        UserEntity myUser = UserEntity.builder().email(pUser.email())
                                                 .password(password)
