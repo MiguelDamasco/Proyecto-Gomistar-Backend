@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
@@ -22,14 +23,12 @@ public class JwtUtils {
     private String timeExpiration;
     
     public String generateAccesToken(String userName) {
-        
-        Key signatureKey = getSignatureKey();
         return Jwts.builder()
-            .claim("username", userName)
-            .claim("iat", new Date(System.currentTimeMillis()))
-            .claim("exp", new Date(System.currentTimeMillis() + Long.parseLong(timeExpiration)))
-            .signWith(signatureKey)
-            .compact();
+                            .setSubject(userName)
+                            .setIssuedAt(new Date(System.currentTimeMillis()))
+                            .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(timeExpiration)))
+                            .signWith(getSignatureKey(), SignatureAlgorithm.HS256)
+                            .compact();
     }
 
     private Key getSignatureKey() {
@@ -39,31 +38,24 @@ public class JwtUtils {
     
     public boolean isTokenValid(String token) {
         try {
-            Key signatureKey = getSignatureKey();
-    
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(signatureKey)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-    
-            Date expiration = claims.getExpiration();
-            return expiration.after(new Date());
-        } catch (Exception e) {
-            System.out.println("Token inválido, error: " + e.getMessage());
+            Jwts.parser().setSigningKey(getSignatureKey())
+                            .build()
+                            .parseClaimsJws(token)
+                            .getBody();
+            return true;                
+        }
+        catch (Exception e) {
+            System.out.println("Token invalido, error: " + e.getMessage());
             return false;
         }
     }
 
     public Claims extractAllClaims(String token) {
 
-        Key signatureKey = getSignatureKey();
-
-        return Jwts.parserBuilder()
-                .setSigningKey(signatureKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        return Jwts.parser().setSigningKey(getSignatureKey())
+                            .build()
+                            .parseClaimsJws(token)
+                            .getBody();
     }
 
     public <T> T getClaim(String token, Function<Claims, T> claimsFunction) {
@@ -75,5 +67,6 @@ public class JwtUtils {
     public String getUsernameFromToken(String token) {
         return getClaim(token, Claims::getSubject);
     }
+
 
 }

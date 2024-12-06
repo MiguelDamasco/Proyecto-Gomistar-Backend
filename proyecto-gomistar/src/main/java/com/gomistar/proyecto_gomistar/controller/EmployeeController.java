@@ -17,7 +17,6 @@ import com.gomistar.proyecto_gomistar.DTO.request.CreateEmployeeDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.EmployeeDTOModify;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponseOne;
-import com.gomistar.proyecto_gomistar.configuration.annotation.IsUser;
 import com.gomistar.proyecto_gomistar.model.EmployeeEntity;
 import com.gomistar.proyecto_gomistar.service.EmployeeService;
 
@@ -44,10 +43,9 @@ public class EmployeeController {
     }
 
     @GetMapping("/find")
-    @IsUser({"ADMIN"})
     public ResponseEntity<?> getEmployee(@RequestParam String pId) {
 
-        EmployeeEntity myEmployee = this.employeeService.getEmployee(pId);
+        EmployeeEntity myEmployee = this.employeeService.findEmployeeById(pId);
         ApiResponse<EmployeeEntity> response = new ApiResponse<>(
             "Empleadon encontrado!",
             myEmployee

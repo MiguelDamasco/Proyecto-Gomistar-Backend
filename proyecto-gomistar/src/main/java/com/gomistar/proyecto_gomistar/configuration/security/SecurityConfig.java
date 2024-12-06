@@ -42,7 +42,7 @@ public class SecurityConfig {
 
         return httpSecurity.csrf(config -> config.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers( "http://localhost:8115/user/all").permitAll();
+                    auth.requestMatchers( "http://localhost:8115/document/test").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(sesion -> {

@@ -1,6 +1,10 @@
 package com.gomistar.proyecto_gomistar.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "document")
 public class AbstractDocument implements IDocument {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,7 +35,8 @@ public class AbstractDocument implements IDocument {
         this.name = pName;
     }
 
-    @ManyToOne(targetEntity = EmployeeEntity.class)
+    @ManyToOne(targetEntity = EmployeeEntity.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "employee_id")
+    @JsonBackReference
     private EmployeeEntity employee; 
 }

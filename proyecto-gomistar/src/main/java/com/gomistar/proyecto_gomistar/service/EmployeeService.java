@@ -5,12 +5,12 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.gomistar.proyecto_gomistar.DTO.IDocument;
 import com.gomistar.proyecto_gomistar.DTO.request.CreateEmployeeDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.EmployeeDTOModify;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
 import com.gomistar.proyecto_gomistar.model.EmployeeEntity;
 import com.gomistar.proyecto_gomistar.repository.EmployeeRepository;
-import com.gomistar.proyecto_gomistar.service.document.UserEmployeeService;
 
 @Service
 public class EmployeeService {
@@ -29,7 +29,7 @@ public class EmployeeService {
         return (List<EmployeeEntity>) this.employeeRepository.findAll();
     }
 
-    public EmployeeEntity getEmployee(String pId) {
+    public EmployeeEntity findEmployeeById(String pId) {
 
         Optional<EmployeeEntity> myEmployeeOptional = this.employeeRepository.findById(Long.parseLong(pId));
 
@@ -49,6 +49,12 @@ public class EmployeeService {
 
         return this.employeeRepository.save(myEmployee);
     }
+    
+    public EmployeeEntity saveEmployee(EmployeeEntity pEmployee) {
+
+        return this.employeeRepository.save(pEmployee);
+    }
+
 
     public EmployeeEntity modifyEmployee(EmployeeDTOModify pEmployee) {
 
@@ -83,5 +89,9 @@ public class EmployeeService {
         this.userEmployeeService.removeEmployee(Long.parseLong(pId));
 
         return myEmployee;
+    }
+
+    public void addDocument(IDocument pDocument) {
+
     }
 }

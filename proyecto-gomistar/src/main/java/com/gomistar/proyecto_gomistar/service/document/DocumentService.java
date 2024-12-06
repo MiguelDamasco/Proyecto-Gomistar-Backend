@@ -3,8 +3,6 @@ package com.gomistar.proyecto_gomistar.service.document;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gomistar.proyecto_gomistar.model.AbstractDocument;
@@ -12,14 +10,12 @@ import com.gomistar.proyecto_gomistar.repository.document.TextDocumentRepository
 
 @Service
 public class DocumentService {
-    
-    
+        
     private final TextDocumentRepository textDocumentRepository;
 
     public DocumentService(TextDocumentRepository pTextDocumentRepository) {
         this.textDocumentRepository = pTextDocumentRepository;
     }
-
 
     public AbstractDocument findDocumentById(Long id) {
         return this.textDocumentRepository.findById(id).orElse(null);

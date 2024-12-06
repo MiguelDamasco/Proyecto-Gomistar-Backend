@@ -19,8 +19,8 @@ import com.gomistar.proyecto_gomistar.DTO.request.UserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTOModify;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
 import com.gomistar.proyecto_gomistar.model.UserEntity;
+import com.gomistar.proyecto_gomistar.service.UserEmployeeService;
 import com.gomistar.proyecto_gomistar.service.UserService;
-import com.gomistar.proyecto_gomistar.service.document.UserEmployeeService;
 
 @RestController
 @RequestMapping("/user")

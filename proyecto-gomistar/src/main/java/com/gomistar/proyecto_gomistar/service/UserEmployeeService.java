@@ -1,4 +1,4 @@
-package com.gomistar.proyecto_gomistar.service.document;
+package com.gomistar.proyecto_gomistar.service;
 
 import java.util.Optional;
 
