@@ -51,7 +51,8 @@ public class EmployeeDocumentService {
         if(pDocument instanceof CreateTextDocumentDTO) {
 
             CreateTextDocumentDTO DTO = (CreateTextDocumentDTO) pDocument;
-            myDocument = TextDocument.builder().texto(DTO.name()).build();
+            myDocument = TextDocument.builder().texto(DTO.text()).build();
+            myDocument.setName(DTO.name());
             this.textDocumentRepository.save(myDocument);
         }
         else if(pDocument instanceof CreateIdentityCardDTO) {

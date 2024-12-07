@@ -1,5 +1,6 @@
 package com.gomistar.proyecto_gomistar.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.catalina.connector.Response;
@@ -15,16 +16,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gomistar.proyecto_gomistar.DTO.IDocument;
 import com.gomistar.proyecto_gomistar.DTO.request.CreateIdentityCardDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.CreateTextDocument;
 import com.gomistar.proyecto_gomistar.DTO.request.CreateTextDocumentDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
+import com.gomistar.proyecto_gomistar.DTO.response.S3ResponseDTO;
 import com.gomistar.proyecto_gomistar.model.AbstractDocument;
 import com.gomistar.proyecto_gomistar.model.document.TextDocument;
 import com.gomistar.proyecto_gomistar.service.EmployeeDocumentService;
 import com.gomistar.proyecto_gomistar.service.document.DocumentService;
+import com.gomistar.proyecto_gomistar.service.s3.S3Service;
 
 @RestController
 @RequestMapping("/document")
@@ -34,13 +38,16 @@ public class DocumentController {
 
     private final EmployeeDocumentService employeeDocumentService;
 
-    public DocumentController(DocumentService pDocumentService, EmployeeDocumentService pEmployeeDocumentService) {
+    private final S3Service s3Service;
+
+    public DocumentController(DocumentService pDocumentService, EmployeeDocumentService pEmployeeDocumentService, S3Service pS3Service) {
         this.documentService = pDocumentService;
         this.employeeDocumentService = pEmployeeDocumentService;
+        this.s3Service = pS3Service;
     }
 
     @PostMapping("/test")
-    public ResponseEntity<?> createTextDocument(CreateTextDocument pDocument) {
+    public ResponseEntity<?> createTextDocument(CreateTextDocumentDTO pDocument) {
 
         AbstractDocument myDocument = this.employeeDocumentService.saveAndAddToEmployee(pDocument);
         ApiResponse<AbstractDocument> response = new ApiResponse<>(
@@ -51,6 +58,18 @@ public class DocumentController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile pFile) throws IOException {
+
+        S3ResponseDTO myDTO = this.s3Service.uploadFile(pFile);
+        ApiResponse<S3ResponseDTO> response = new ApiResponse<>(
+            "Archivo subido correctamente!",
+            myDTO
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
+    }
 
     @GetMapping("/listDocuments")
     public ResponseEntity<?> listAll(@RequestBody CreateTextDocumentDTO pDocument) {

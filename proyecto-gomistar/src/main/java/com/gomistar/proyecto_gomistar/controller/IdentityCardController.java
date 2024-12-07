@@ -55,7 +55,6 @@ public class IdentityCardController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-
     @DeleteMapping("/delete")
     public ResponseEntity<?> removeDocumentFromEmployee(@RequestBody RemoveDocumentFromEmployeeDTO pDTO){
 
