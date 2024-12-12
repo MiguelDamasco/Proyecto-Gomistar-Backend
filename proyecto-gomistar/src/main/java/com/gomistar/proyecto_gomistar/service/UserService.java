@@ -2,13 +2,16 @@ package com.gomistar.proyecto_gomistar.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTOModify;
+import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
+import com.gomistar.proyecto_gomistar.model.RoleEntity;
 import com.gomistar.proyecto_gomistar.model.UserEntity;
 import com.gomistar.proyecto_gomistar.repository.UserRepository;
 
@@ -20,6 +23,17 @@ public class UserService {
 
     public UserService(UserRepository pUserRepository) {
         this.userRepository = pUserRepository;
+    }
+
+    public getIdUserDTO getId(String pUsername) {
+
+        Optional<UserEntity> myUserOptional = this.userRepository.findByUsername(pUsername);
+
+        if(!myUserOptional.isPresent()) {
+            throw new RequestException("P-233", "El usuario: " + pUsername + " no existe");
+        }
+
+        return new getIdUserDTO(String.valueOf(myUserOptional.get().getId()));
     }
 
     public Long findIdByUsername(String pUsername) {
@@ -52,7 +66,7 @@ public class UserService {
         return myEmployeeOptional.get();
     }
 
-    public UserEntity save(UserDTO pUser) {
+    public UserEntity save(UserDTO pUser, Set<RoleEntity> roleList) {
 
         if(existEmail(pUser.email())) {
             throw new RequestException("p-222", "el email ya existe!");
@@ -64,13 +78,33 @@ public class UserService {
        UserEntity myUser = UserEntity.builder().email(pUser.email())
                                                 .password(password)
                                                 .username(pUser.username())
+                                                .roles(roleList)
                                                 .build();
 
         this.userRepository.save(myUser);
 
         return myUser;
-    }
 
+    }
+        public UserEntity save(UserDTO pUser) {
+
+            if(existEmail(pUser.email())) {
+                throw new RequestException("p-222", "el email ya existe!");
+            }
+    
+            BCryptPasswordEncoder passwordEnconder = new BCryptPasswordEncoder();
+            String password = passwordEnconder.encode(pUser.password());
+    
+           UserEntity myUser = UserEntity.builder().email(pUser.email())
+                                                    .password(password)
+                                                    .username(pUser.username())
+                                                    .build();
+    
+            this.userRepository.save(myUser);
+    
+            return myUser;
+        }
+        
     public UserEntity modify(UserDTOModify pUser) {
 
         Optional<UserEntity> myUserOptional = this.userRepository.findById(Long.parseLong(pUser.id()));

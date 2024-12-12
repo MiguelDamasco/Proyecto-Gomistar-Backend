@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gomistar.proyecto_gomistar.DTO.request.AddEmployeeToUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTOModify;
+import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
 import com.gomistar.proyecto_gomistar.model.UserEntity;
 import com.gomistar.proyecto_gomistar.service.UserEmployeeService;
@@ -42,6 +43,18 @@ public class UserController {
         ApiResponse<List<UserEntity>> response = new ApiResponse<>(
             "Lista con todos los usuarios",
             myUserList
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/getId")
+    public ResponseEntity<?> getId(@RequestParam String username) {
+
+        getIdUserDTO myUsername = this.userService.getId(username);
+        ApiResponse<getIdUserDTO> response = new ApiResponse<>(
+            "Id encontrada!",
+            myUsername
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
