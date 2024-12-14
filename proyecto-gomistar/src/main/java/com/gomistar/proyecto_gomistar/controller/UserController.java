@@ -18,6 +18,8 @@ import com.gomistar.proyecto_gomistar.DTO.request.AddEmployeeToUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTOModify;
 import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserPasswordDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserUsernameDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
 import com.gomistar.proyecto_gomistar.model.UserEntity;
 import com.gomistar.proyecto_gomistar.service.UserEmployeeService;
@@ -67,6 +69,30 @@ public class UserController {
         ApiResponse<UserEntity> response = new ApiResponse<>(
             "Usuario encontrado!",
             myUser
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/checkPassword")
+    public ResponseEntity<?> checkUserPassword(@RequestBody CheckUserPasswordDTO pDTO) {
+
+        boolean myUserExist = this.userService.checkPassword(pDTO);
+        ApiResponse<Boolean> response = new ApiResponse<>(
+            "La contraseñas coinciden!",
+            myUserExist
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/checkUsername")
+    public ResponseEntity<?> checkUserUsername(@RequestBody CheckUserUsernameDTO pDTO) {
+        
+        boolean myUsernameExist = this.userService.checkUsername(pDTO);
+        ApiResponse<Boolean> response = new ApiResponse<>(
+            "Username disponible!",
+            myUsernameExist
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);

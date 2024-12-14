@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gomistar.proyecto_gomistar.DTO.request.UserEmployeeDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserEmailDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserLastnameDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserNameDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserPasswordDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserUsernameDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
 import com.gomistar.proyecto_gomistar.DTO.response.UserEmployeeResponseDTO;
 import com.gomistar.proyecto_gomistar.model.UserEntity;
@@ -58,6 +62,54 @@ public class UserEmployeeController {
         ApiResponse<UserEntity> response = new ApiResponse<>(
             "Nombre modificado con exito!",
             myUser
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping("/modify_lastname")
+    public ResponseEntity<?> modifyLastname(@RequestBody ModifyUserLastnameDTO pDTO) {
+     
+        UserEntity myUEntity = this.userEmployeeService.modifyUser(pDTO);
+        ApiResponse<UserEntity> response = new ApiResponse<>(
+            "Apellido modificado correctamente!",
+            myUEntity
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping("/modify_email")
+    public ResponseEntity<?> modifyEmail(@RequestBody ModifyUserEmailDTO pDTO) {
+        
+        UserEntity myUEntity = this.userEmployeeService.modifyUser(pDTO);
+        ApiResponse<UserEntity> response = new ApiResponse<>(
+            "Email modificado correctamente!",
+            myUEntity
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping("/modify_username")
+    public ResponseEntity<?> modifyUsername(@RequestBody ModifyUserUsernameDTO pDTO) {
+
+        UserEntity myUEntity = this.userEmployeeService.modifyUser(pDTO);
+        ApiResponse<UserEntity> response = new ApiResponse<>(
+            "Usuario modificado correctamente!",
+            myUEntity
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping("/modify_password")
+    public ResponseEntity<?> modifyPassword(@RequestBody ModifyUserPasswordDTO pDTO) {
+
+        UserEntity myUEntity = this.userEmployeeService.modifyUser(pDTO);
+        ApiResponse<UserEntity> response = new ApiResponse<>(
+            "Contraseña modificado correctamente!",
+            myUEntity
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);

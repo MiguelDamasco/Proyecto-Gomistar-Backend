@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.gomistar.proyecto_gomistar.DTO.request.AddEmployeeToUserDTO;
@@ -12,7 +13,11 @@ import com.gomistar.proyecto_gomistar.DTO.request.CreateEmployeeDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserEmployeeDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.IUserModify;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserEmailDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserLastnameDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserNameDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserPasswordDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserUsernameDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.UserEmployeeResponseDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
 import com.gomistar.proyecto_gomistar.model.ERole;
@@ -33,12 +38,15 @@ public class UserEmployeeService {
 
     private final RoleService roleService;
 
+    private final PasswordEncoder passwordEncoder;
 
-    public UserEmployeeService(UserRepository pUserRepository, EmployeeRepository pEmployeeRepository, UserService pUserService, RoleService pRoleService) {
+
+    public UserEmployeeService(UserRepository pUserRepository, EmployeeRepository pEmployeeRepository, UserService pUserService, RoleService pRoleService, PasswordEncoder pPasswordEncoder) {
         this.userRepository = pUserRepository;
         this.employeeRepository = pEmployeeRepository;
         this.userService = pUserService;
         this.roleService = pRoleService;
+        this.passwordEncoder = pPasswordEncoder;
     }
 
     public UserEmployeeResponseDTO getUser(String pId) {
@@ -96,13 +104,58 @@ public class UserEmployeeService {
 
         UserEntity myUser;
         if(pUser instanceof ModifyUserNameDTO) {
-            
+
             ModifyUserNameDTO myDTO = (ModifyUserNameDTO) pUser;
             myUser = this.userService.getUser(myDTO.idUser());
             myUser.getEmployee().setName(myDTO.name());
             return this.userRepository.save(myUser);
         }
+        else if(pUser instanceof ModifyUserLastnameDTO) {
+
+            ModifyUserLastnameDTO myDTO = (ModifyUserLastnameDTO) pUser;
+            myUser = this.userService.getUser(myDTO.idUser());
+            myUser.getEmployee().setLastName(myDTO.lastname());
+            return this.userRepository.save(myUser);
+        }
+        else if(pUser instanceof ModifyUserEmailDTO) {
+
+            ModifyUserEmailDTO myDTO = (ModifyUserEmailDTO) pUser;
+            myUser = this.userService.getUser(myDTO.idUser());
+            myUser.setEmail(myDTO.email());
+            return this.userRepository.save(myUser);
+        }
+        else if(pUser instanceof ModifyUserUsernameDTO) {
+
+            ModifyUserUsernameDTO myDTO = (ModifyUserUsernameDTO) pUser;
+            myUser = this.userService.getUser(myDTO.idUser());
+            myUser.setUsername(myDTO.username());
+            return this.userRepository.save(myUser);
+        }
+        else if(pUser instanceof ModifyUserPasswordDTO) {
+
+            ModifyUserPasswordDTO myDTO = (ModifyUserPasswordDTO) pUser;
+            myUser = this.userService.getUser(myDTO.idUser());
+            System.out.println("idUsuario: " + myDTO.idUser());
+            System.out.println("Contraseña vieja: " + myDTO.oldPassword());
+            System.out.println("Contraseña nueva: " + myDTO.newPassword());
+            System.out.println("igualdad: " + this.passwordEncoder.matches(myDTO.oldPassword(), myUser.getPassword()));
+            this.checkPassword(myUser, myDTO.newPassword(), myDTO.oldPassword());
+            String newPasswordCrypt = this.passwordEncoder.encode(myDTO.newPassword());
+            myUser.setPassword(newPasswordCrypt);
+            return this.userRepository.save(myUser);
+
+        }
         throw new RequestException("P-297", "Campo a modificar no encontrado");
+    }
+
+    public void checkPassword(UserEntity pUser, String newPassword, String oldPassword) {
+
+        if(!this.passwordEncoder.matches(oldPassword, pUser.getPassword())) {
+            throw new RequestException("P-296", "Contraseña vieja incorrecta");
+        }
+        else if(newPassword.equals(oldPassword)) {
+            throw new RequestException("P-255", "La nueva contraseña debe ser diferente de la actual!");
+        }
     }
 
     public void removeEmployee(long pId) {

@@ -18,6 +18,8 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     boolean existsByEmail(String email);
 
+    boolean existsByUsername(String username);
+
     Optional<UserEntity> findByEmail(String email);
 
     @Query(value = """
