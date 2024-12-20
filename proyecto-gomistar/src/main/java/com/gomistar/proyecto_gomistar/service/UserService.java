@@ -1,68 +1,220 @@
 package com.gomistar.proyecto_gomistar.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.gomistar.proyecto_gomistar.DTO.request.AddEmployeeToUserDTO;
+import com.gomistar.proyecto_gomistar.DTO.email.EmailDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.ConfirmEmailDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTOModify;
+import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserPasswordDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserUsernameDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
-import com.gomistar.proyecto_gomistar.model.EmployeeEntity;
+import com.gomistar.proyecto_gomistar.model.ConfirmationTokenEntity;
+import com.gomistar.proyecto_gomistar.model.RoleEntity;
 import com.gomistar.proyecto_gomistar.model.UserEntity;
 import com.gomistar.proyecto_gomistar.repository.UserRepository;
+import com.gomistar.proyecto_gomistar.service.email.ConfirmationTokenService;
+import com.gomistar.proyecto_gomistar.service.email.EmailService;
+
+import jakarta.mail.MessagingException;
 
 @Service
 public class UserService {
     
     private final UserRepository userRepository;
 
-    private final EmployeeService employeeService;
+    private final PasswordEncoder passwordEncoder;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ConfirmationTokenService confirmationTokenService;
 
-    public UserService(UserRepository pUserRepository, EmployeeService pEmployeeService, BCryptPasswordEncoder pPasswordEncoder) {
+    private final EmailService emailService;
+
+    public UserService(UserRepository pUserRepository, PasswordEncoder pPasswordEncoder, ConfirmationTokenService pConfirmationTokenService, EmailService pEmailService) {
         this.userRepository = pUserRepository;
-        this.employeeService = pEmployeeService;
-        this.bCryptPasswordEncoder = pPasswordEncoder;
+        this.passwordEncoder = pPasswordEncoder;
+        this.confirmationTokenService = pConfirmationTokenService;
+        this.emailService = pEmailService;
     }
 
-    public Optional<UserEntity> findById(Long id) {
-        return this.userRepository.findById(id);
+    public getIdUserDTO getId(String pUsername) {
+
+        Optional<UserEntity> myUserOptional = this.userRepository.findByUsername(pUsername);
+
+        if(!myUserOptional.isPresent()) {
+            throw new RequestException("P-233", "El usuario: " + pUsername + " no existe");
+        }
+
+        return new getIdUserDTO(String.valueOf(myUserOptional.get().getId()));
     }
 
-    public UserEntity save(UserEntity user) {
-        return this.userRepository.save(user);
+    public Long findIdByUsername(String pUsername) {
+
+        Optional<UserEntity> myUserOptional = this.userRepository.findByUsername(pUsername);
+
+        if(!myUserOptional.isPresent()) {
+            throw new RequestException("P-233", "El usuario: " + pUsername + " no existe");
+        }
+
+        return myUserOptional.get().getId();
+    }
+
+    public boolean existUsername(String pUsername) {
+        return this.userRepository.existsByUsername(pUsername);
     }
 
     public boolean existEmail(String pEmail) {
         return this.userRepository.existsByEmail(pEmail);
     }
 
-    public Optional<UserEntity> getByEmployee(String pid) {
-        return this.userRepository.findByEmployee(Long.parseLong(pid));
-    }
+    public boolean checkPassword(CheckUserPasswordDTO pDTO) {
 
-    public void removeEmployee(long pId) {
-        
-        Optional<UserEntity> myUserOptional = this.userRepository.findByEmployee(pId);
+        UserEntity myUser = this.getUser(pDTO.idUser());
 
-        if(!myUserOptional.isPresent()) {
-            throw new RequestException("P-288", "El usuario a eliminar su empleado no existe");
+        if(!this.passwordEncoder.matches(pDTO.password(), myUser.getPassword())) {
+            throw new RequestException("P-296", "Contraseña incorrecta!");
         }
 
-        UserEntity myUser = myUserOptional.get();
+        return true;
+    }
 
-        myUser.setEmployee(null);
+    public boolean checkUsername(CheckUserUsernameDTO pDTO) {
+
+        boolean result = this.existUsername(pDTO.username());
+
+        if(result) {
+            throw new RequestException("P-293", "Ya existe el username, ingrese uno que no exista.");
+        }
+
+        return true;
+    }
+
+    public List<UserEntity> getAllUser() {
+        return (List<UserEntity>) this.userRepository.findAll();
+    }
+
+    public UserEntity getUser(String pId) {
+
+        Optional<UserEntity> myEmployeeOptional = this.userRepository.findById(Long.parseLong(pId));
+
+        if(!myEmployeeOptional.isPresent()) {
+            throw new RequestException("P-223", "El usuario buscado no existe");
+        }
+
+        return myEmployeeOptional.get();
+    }
+
+    public Set<RoleEntity> getRoles(String pIdUser) {
+
+        UserEntity myUser = this.getUser(pIdUser);
+        return myUser.getRoles();
+    }
+
+    public void addConfirmationToken(String pIdUser) {
+
+        UserEntity myUser = this.getUser(pIdUser);
+
+        ConfirmationTokenEntity myConfirmationToken = this.confirmationTokenService.createConfirmationToken(myUser);
+
+        myUser.addToken(myConfirmationToken);
 
         this.userRepository.save(myUser);
+
+        String subject = "Confirmación de correo electronico";
+
+        String message = "Clave: " + myConfirmationToken.getToken();
+
+        EmailDTO myDTO = new EmailDTO(myUser.getEmail(), subject, message);
+
+        try {
+            this.emailService.sendMail(myDTO);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            throw new RequestException("P-230", "Error al mandar el correo de confirmacion de email");
+        }
+
+    } 
+
+    public UserEntity save(UserDTO pUser, Set<RoleEntity> roleList) {
+
+        if(existEmail(pUser.email())) {
+            throw new RequestException("p-222", "el email ya existe!");
+        }
+
+        String password = this.passwordEncoder.encode(pUser.password());
+
+
+       UserEntity myUser = UserEntity.builder().email(pUser.email())
+                                                .password(password)
+                                                .username(pUser.username())
+                                                .roles(roleList)
+                                                .isConfirmed(false)
+                                                .build();
+                                       
+
+        this.userRepository.save(myUser);
+
+        return myUser;
+
+    }
+        public UserEntity save(UserDTO pUser) {
+
+            if(existEmail(pUser.email())) {
+                throw new RequestException("p-222", "el email ya existe!");
+            }
+    
+            
+            String password = this.passwordEncoder.encode(pUser.password());
+    
+           UserEntity myUser = UserEntity.builder().email(pUser.email())
+                                                    .password(password)
+                                                    .username(pUser.username())
+                                                    .isConfirmed(false)
+                                                    .build();
+    
+            this.userRepository.save(myUser);
+    
+            return myUser;
+        }
+
+    @Transactional
+    public void updateUserTokens(UserEntity user, List<ConfirmationTokenEntity> newTokens) {
+       
+        user.getTokens().clear();
+        
+        user.getTokens().addAll(newTokens);
+        
+        userRepository.save(user);
+    }
+
+    public void confirmEmail(ConfirmEmailDTO pDTO) {
+
+        UserEntity myUser = this.getUser(pDTO.idUser());
+        List<ConfirmationTokenEntity> myList = this.confirmationTokenService.updateTokenActive(myUser);
+        updateUserTokens(myUser, myList);
+        ConfirmationTokenEntity result = this.confirmationTokenService.confimrToken(myList, pDTO.token());
+        if(result == null) {
+            throw new RequestException("P-211", "Codigo de confirmacion no valido");
+        }
+        
+        myUser.setConfirmed(true);
+        this.userRepository.save(myUser);
+        this.confirmationTokenService.desactivateToken(result.getUsers().getId());
+
     }
 
     public UserEntity modify(UserDTOModify pUser) {
 
-        Optional<UserEntity> myUserOptional = this.findById(Long.parseLong(pUser.id()));
+        Optional<UserEntity> myUserOptional = this.userRepository.findById(Long.parseLong(pUser.id()));
 
         if(!myUserOptional.isPresent()) {
             throw new RequestException("P-223", "No existe el usuario!");
@@ -79,45 +231,4 @@ public class UserService {
         return myUser;
     }
 
-    public UserEntity save(UserDTO pUser) {
-
-        if(existEmail(pUser.email())) {
-            throw new RequestException("p-222", "el email ya existe!");
-        }
-
-        String password = this.bCryptPasswordEncoder.encode(pUser.password());
-
-       UserEntity myUser = UserEntity.builder().email(pUser.email())
-                                                .password(password)
-                                                .username(pUser.username())
-                                                .build();
-
-        this.userRepository.save(myUser);
-
-        return myUser;
-    }
-
-    public List<UserEntity> getAll() {
-        return (List<UserEntity>) this.userRepository.findAll();
-    }
-
-    public UserEntity addEmployee(AddEmployeeToUserDTO pDTO) {
-        
-        Optional<UserEntity> myUserOptional = findById(Long.valueOf(pDTO.idUser()));
-
-        if(!myUserOptional.isPresent()) {
-            throw new RequestException("p-225", "El usuario seleccionado no existe");
-        }
-
-        UserEntity myUser = myUserOptional.get();
-
-        EmployeeEntity myEmployee = this.employeeService.saveEmployee(pDTO);
-
-        myUser.setEmployee(myEmployee);
-
-        this.userRepository.save(myUser);
-
-        return myUser;
-
-    }
 }

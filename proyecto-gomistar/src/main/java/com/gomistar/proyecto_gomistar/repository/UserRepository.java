@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.gomistar.proyecto_gomistar.model.UserEntity;
+import java.util.List;
+
 
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
@@ -16,6 +18,10 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     boolean existsByEmail(String email);
 
+    boolean existsByUsername(String username);
+
+    Optional<UserEntity> findByEmail(String email);
+
     @Query(value = """
             SELECT e.id as employee_id, u.id, u.email, u.password, u.username
             FROM users u
@@ -23,7 +29,7 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
             ON u.employee_id = e.id
             WHERE e.id = :id;
             """, nativeQuery = true)
-    Optional<UserEntity> findByEmployee(@Param("id") long id);
+    Optional<UserEntity> findByEmployee(@Param("id") long pId);
 
    /*  @Query("SELECT u FROM UserEntity u WHERE u.username = ?1")
     Optional<UserEntity> getName(String username);

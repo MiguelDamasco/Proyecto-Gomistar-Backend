@@ -3,6 +3,8 @@ package com.gomistar.proyecto_gomistar.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,6 +38,18 @@ public class EmployeeEntity {
     @Column(name = "is_active", columnDefinition = "TINYINT(1)")
     private boolean isActive;
 
-    @OneToMany(mappedBy = "employee", targetEntity = AbstractDocument.class, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "employee", targetEntity = AbstractDocument.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<AbstractDocument> documents; 
+
+
+    public void addDocument(AbstractDocument pDocument) {
+        pDocument.setEmployee(this);
+        this.documents.add(pDocument);
+    }
+
+    public void removeDocument(AbstractDocument pDocument) {
+        pDocument.setEmployee(null);
+        this.documents.remove(pDocument);
+    }
 }

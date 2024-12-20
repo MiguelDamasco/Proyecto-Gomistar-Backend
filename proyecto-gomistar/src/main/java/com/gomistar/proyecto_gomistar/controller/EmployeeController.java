@@ -42,11 +42,10 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-
     @GetMapping("/find")
     public ResponseEntity<?> getEmployee(@RequestParam String pId) {
 
-        EmployeeEntity myEmployee = this.employeeService.getEmployee(pId);
+        EmployeeEntity myEmployee = this.employeeService.findEmployeeById(pId);
         ApiResponse<EmployeeEntity> response = new ApiResponse<>(
             "Empleadon encontrado!",
             myEmployee

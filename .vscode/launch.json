@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Application<proyecto-gomistar>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.gomistar.proyecto_gomistar.Application",
+            "projectName": "proyecto-gomistar",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
