@@ -122,6 +122,7 @@ public class UserEmployeeService {
             ModifyUserEmailDTO myDTO = (ModifyUserEmailDTO) pUser;
             myUser = this.userService.getUser(myDTO.idUser());
             myUser.setEmail(myDTO.email());
+            myUser.setConfirmed(false);
             return this.userRepository.save(myUser);
         }
         else if(pUser instanceof ModifyUserUsernameDTO) {

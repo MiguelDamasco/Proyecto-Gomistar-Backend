@@ -1,22 +1,32 @@
 package com.gomistar.proyecto_gomistar.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.gomistar.proyecto_gomistar.DTO.email.EmailDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.ConfirmEmailDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTOModify;
 import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserPasswordDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserUsernameDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
+import com.gomistar.proyecto_gomistar.model.ConfirmationTokenEntity;
 import com.gomistar.proyecto_gomistar.model.RoleEntity;
 import com.gomistar.proyecto_gomistar.model.UserEntity;
 import com.gomistar.proyecto_gomistar.repository.UserRepository;
+import com.gomistar.proyecto_gomistar.service.email.ConfirmationTokenService;
+import com.gomistar.proyecto_gomistar.service.email.EmailService;
+
+import jakarta.mail.MessagingException;
 
 @Service
 public class UserService {
@@ -25,9 +35,15 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository pUserRepository, PasswordEncoder pPasswordEncoder) {
+    private final ConfirmationTokenService confirmationTokenService;
+
+    private final EmailService emailService;
+
+    public UserService(UserRepository pUserRepository, PasswordEncoder pPasswordEncoder, ConfirmationTokenService pConfirmationTokenService, EmailService pEmailService) {
         this.userRepository = pUserRepository;
         this.passwordEncoder = pPasswordEncoder;
+        this.confirmationTokenService = pConfirmationTokenService;
+        this.emailService = pEmailService;
     }
 
     public getIdUserDTO getId(String pUsername) {
@@ -97,6 +113,37 @@ public class UserService {
         return myEmployeeOptional.get();
     }
 
+    public Set<RoleEntity> getRoles(String pIdUser) {
+
+        UserEntity myUser = this.getUser(pIdUser);
+        return myUser.getRoles();
+    }
+
+    public void addConfirmationToken(String pIdUser) {
+
+        UserEntity myUser = this.getUser(pIdUser);
+
+        ConfirmationTokenEntity myConfirmationToken = this.confirmationTokenService.createConfirmationToken(myUser);
+
+        myUser.addToken(myConfirmationToken);
+
+        this.userRepository.save(myUser);
+
+        String subject = "Confirmación de correo electronico";
+
+        String message = "Clave: " + myConfirmationToken.getToken();
+
+        EmailDTO myDTO = new EmailDTO(myUser.getEmail(), subject, message);
+
+        try {
+            this.emailService.sendMail(myDTO);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            throw new RequestException("P-230", "Error al mandar el correo de confirmacion de email");
+        }
+
+    } 
+
     public UserEntity save(UserDTO pUser, Set<RoleEntity> roleList) {
 
         if(existEmail(pUser.email())) {
@@ -105,11 +152,14 @@ public class UserService {
 
         String password = this.passwordEncoder.encode(pUser.password());
 
+
        UserEntity myUser = UserEntity.builder().email(pUser.email())
                                                 .password(password)
                                                 .username(pUser.username())
                                                 .roles(roleList)
+                                                .isConfirmed(false)
                                                 .build();
+                                       
 
         this.userRepository.save(myUser);
 
@@ -128,12 +178,39 @@ public class UserService {
            UserEntity myUser = UserEntity.builder().email(pUser.email())
                                                     .password(password)
                                                     .username(pUser.username())
+                                                    .isConfirmed(false)
                                                     .build();
     
             this.userRepository.save(myUser);
     
             return myUser;
         }
+
+    @Transactional
+    public void updateUserTokens(UserEntity user, List<ConfirmationTokenEntity> newTokens) {
+       
+        user.getTokens().clear();
+        
+        user.getTokens().addAll(newTokens);
+        
+        userRepository.save(user);
+    }
+
+    public void confirmEmail(ConfirmEmailDTO pDTO) {
+
+        UserEntity myUser = this.getUser(pDTO.idUser());
+        List<ConfirmationTokenEntity> myList = this.confirmationTokenService.updateTokenActive(myUser);
+        updateUserTokens(myUser, myList);
+        ConfirmationTokenEntity result = this.confirmationTokenService.confimrToken(myList, pDTO.token());
+        if(result == null) {
+            throw new RequestException("P-211", "Codigo de confirmacion no valido");
+        }
+        
+        myUser.setConfirmed(true);
+        this.userRepository.save(myUser);
+        this.confirmationTokenService.desactivateToken(result.getUsers().getId());
+
+    }
 
     public UserEntity modify(UserDTOModify pUser) {
 

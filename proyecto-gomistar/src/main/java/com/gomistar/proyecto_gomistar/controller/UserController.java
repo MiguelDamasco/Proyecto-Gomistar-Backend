@@ -2,6 +2,7 @@ package com.gomistar.proyecto_gomistar.controller;
 
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserPasswordDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserUsernameDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
+import com.gomistar.proyecto_gomistar.model.RoleEntity;
 import com.gomistar.proyecto_gomistar.model.UserEntity;
 import com.gomistar.proyecto_gomistar.service.UserEmployeeService;
 import com.gomistar.proyecto_gomistar.service.UserService;
@@ -129,6 +131,18 @@ public class UserController {
         ApiResponse<UserEntity> response = new ApiResponse<>(
             "Empleado añadido correctamente",
             myUser
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/getRoles")
+    public ResponseEntity<?> getRoles(@RequestParam String pIdUser) {
+
+        Set<RoleEntity> myRoles = this.userService.getRoles(pIdUser);
+        ApiResponse<Set<RoleEntity>> response = new ApiResponse<>(
+            "Roles obtenidos!",
+            myRoles
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
