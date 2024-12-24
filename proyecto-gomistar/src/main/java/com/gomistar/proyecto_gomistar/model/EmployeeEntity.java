@@ -33,6 +33,7 @@ public class EmployeeEntity {
 
     private String name;
 
+    @Column(name = "last_name")
     private String lastName;
 
     @Column(name = "is_active", columnDefinition = "TINYINT(1)")

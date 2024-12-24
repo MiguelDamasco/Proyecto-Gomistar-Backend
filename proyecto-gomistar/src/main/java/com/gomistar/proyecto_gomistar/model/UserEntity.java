@@ -3,7 +3,9 @@ package com.gomistar.proyecto_gomistar.model;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.gomistar.proyecto_gomistar.model.ship.AbstractShip;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -64,6 +67,11 @@ public class UserEntity {
     @OneToMany(mappedBy = "users", targetEntity = ConfirmationTokenEntity.class, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<ConfirmationTokenEntity> tokens;
+
+    @ManyToOne(targetEntity = AbstractShip.class)
+    @JoinColumn(name = "ship_id")
+    @JsonBackReference
+    private AbstractShip ship;
 
     public void addToken(ConfirmationTokenEntity pToken) {
         this.tokens.add(pToken);
