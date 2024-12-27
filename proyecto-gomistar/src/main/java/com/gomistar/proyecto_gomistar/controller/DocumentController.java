@@ -24,8 +24,8 @@ import com.gomistar.proyecto_gomistar.DTO.request.CreateTextDocument;
 import com.gomistar.proyecto_gomistar.DTO.request.CreateTextDocumentDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
 import com.gomistar.proyecto_gomistar.DTO.response.S3ResponseDTO;
-import com.gomistar.proyecto_gomistar.model.AbstractDocument;
-import com.gomistar.proyecto_gomistar.model.document.TextDocument;
+import com.gomistar.proyecto_gomistar.model.user.document.AbstractDocument;
+import com.gomistar.proyecto_gomistar.model.user.document.TextDocument;
 import com.gomistar.proyecto_gomistar.service.EmployeeDocumentService;
 import com.gomistar.proyecto_gomistar.service.document.DocumentService;
 import com.gomistar.proyecto_gomistar.service.s3.S3Service;
@@ -115,7 +115,5 @@ public class DocumentController {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error, el documento no existe.");
     }
-
-
 
 }

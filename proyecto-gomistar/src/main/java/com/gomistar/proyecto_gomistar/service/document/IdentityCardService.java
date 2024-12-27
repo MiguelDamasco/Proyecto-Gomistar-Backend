@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.gomistar.proyecto_gomistar.DTO.request.CreateIdentityCardDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
-import com.gomistar.proyecto_gomistar.model.AbstractDocument;
-import com.gomistar.proyecto_gomistar.model.EmployeeEntity;
-import com.gomistar.proyecto_gomistar.model.document.IdentityCardDocument;
+import com.gomistar.proyecto_gomistar.model.user.EmployeeEntity;
+import com.gomistar.proyecto_gomistar.model.user.document.AbstractDocument;
+import com.gomistar.proyecto_gomistar.model.user.document.IdentityCardDocument;
 import com.gomistar.proyecto_gomistar.repository.document.IdentityCardRepository;
 
 @Service

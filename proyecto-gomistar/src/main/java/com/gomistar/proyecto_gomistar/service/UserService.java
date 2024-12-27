@@ -19,9 +19,9 @@ import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserPasswordDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserUsernameDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
-import com.gomistar.proyecto_gomistar.model.ConfirmationTokenEntity;
-import com.gomistar.proyecto_gomistar.model.RoleEntity;
-import com.gomistar.proyecto_gomistar.model.UserEntity;
+import com.gomistar.proyecto_gomistar.model.email.ConfirmationTokenEntity;
+import com.gomistar.proyecto_gomistar.model.role.RoleEntity;
+import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 import com.gomistar.proyecto_gomistar.repository.UserRepository;
 import com.gomistar.proyecto_gomistar.service.email.ConfirmationTokenService;
 import com.gomistar.proyecto_gomistar.service.email.EmailService;
@@ -229,6 +229,12 @@ public class UserService {
         this.userRepository.save(myUser);
 
         return myUser;
+    }
+
+    public void deleteUser(String pId) {
+
+        UserEntity myUser = this.getUser(pId);
+        this.userRepository.delete(myUser);
     }
 
 }

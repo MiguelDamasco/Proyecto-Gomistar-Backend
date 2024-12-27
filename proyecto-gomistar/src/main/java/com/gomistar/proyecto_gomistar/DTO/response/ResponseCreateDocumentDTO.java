@@ -1,6 +1,6 @@
 package com.gomistar.proyecto_gomistar.DTO.response;
 
-import com.gomistar.proyecto_gomistar.model.AbstractDocument;
+import com.gomistar.proyecto_gomistar.model.user.document.AbstractDocument;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

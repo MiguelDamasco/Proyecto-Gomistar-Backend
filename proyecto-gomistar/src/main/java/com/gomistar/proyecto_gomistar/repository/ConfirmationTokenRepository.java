@@ -7,8 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gomistar.proyecto_gomistar.model.ConfirmationTokenEntity;
-import com.gomistar.proyecto_gomistar.model.UserEntity;
+import com.gomistar.proyecto_gomistar.model.email.ConfirmationTokenEntity;
+import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 
 import java.util.List;
 

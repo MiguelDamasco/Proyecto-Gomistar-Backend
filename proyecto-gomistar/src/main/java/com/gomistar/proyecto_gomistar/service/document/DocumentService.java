@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.gomistar.proyecto_gomistar.model.AbstractDocument;
+import com.gomistar.proyecto_gomistar.model.user.document.AbstractDocument;
 import com.gomistar.proyecto_gomistar.repository.document.TextDocumentRepository;
 
 @Service

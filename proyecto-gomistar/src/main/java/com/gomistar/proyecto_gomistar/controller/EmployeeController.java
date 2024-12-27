@@ -17,7 +17,7 @@ import com.gomistar.proyecto_gomistar.DTO.request.CreateEmployeeDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.EmployeeDTOModify;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponseOne;
-import com.gomistar.proyecto_gomistar.model.EmployeeEntity;
+import com.gomistar.proyecto_gomistar.model.user.EmployeeEntity;
 import com.gomistar.proyecto_gomistar.service.EmployeeService;
 
 @RestController

@@ -1,5 +1,6 @@
 package com.gomistar.proyecto_gomistar.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import com.gomistar.proyecto_gomistar.DTO.request.CreateEmployeeDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserEmployeeDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.IUserModify;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserEmailDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserLastnameDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserNameDTO;
@@ -20,10 +22,10 @@ import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserPasswordDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserUsernameDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.UserEmployeeResponseDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
-import com.gomistar.proyecto_gomistar.model.ERole;
-import com.gomistar.proyecto_gomistar.model.EmployeeEntity;
-import com.gomistar.proyecto_gomistar.model.RoleEntity;
-import com.gomistar.proyecto_gomistar.model.UserEntity;
+import com.gomistar.proyecto_gomistar.model.role.ERole;
+import com.gomistar.proyecto_gomistar.model.role.RoleEntity;
+import com.gomistar.proyecto_gomistar.model.user.EmployeeEntity;
+import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 import com.gomistar.proyecto_gomistar.repository.EmployeeRepository;
 import com.gomistar.proyecto_gomistar.repository.UserRepository;
 
@@ -52,7 +54,22 @@ public class UserEmployeeService {
     public UserEmployeeResponseDTO getUser(String pId) {
 
         UserEntity myUser= this.userService.getUser(pId);
-        return new UserEmployeeResponseDTO(myUser.getUsername(), myUser.getPassword(), myUser.getEmail(), myUser.getEmployee().getName(), myUser.getEmployee().getLastName());
+        return new UserEmployeeResponseDTO(String.valueOf(myUser.getId()),myUser.getUsername(), myUser.getPassword(), myUser.getEmail(), myUser.getEmployee().getName(), myUser.getEmployee().getLastName());
+    }
+
+    public List<UserEmployeeResponseDTO> listUsers() {
+
+        List<UserEntity> myList = this.userService.getAllUser();
+        List<UserEmployeeResponseDTO> resultList = new ArrayList<>();
+
+        for(UserEntity myUser : myList) {
+            if(myUser.getEmployee() != null) {
+                UserEmployeeResponseDTO dto = new UserEmployeeResponseDTO(String.valueOf(myUser.getId()),myUser.getUsername(), myUser.getPassword(), myUser.getEmail(), myUser.getEmployee().getName(), myUser.getEmployee().getLastName());
+                resultList.add(dto);
+            }
+        }
+
+        return resultList;
     }
 
     public Set<RoleEntity> obtainRoles(List<String> pRole) {
@@ -172,6 +189,25 @@ public class UserEmployeeService {
         myUser.setEmployee(null);
 
         this.userRepository.save(myUser);
+    }
+
+    public UserEntity modifyUser(ModifyUserDTO pDTO) {
+        
+        UserEntity myUser = this.userService.getUser(pDTO.id());
+        if(!myUser.getEmail().equalsIgnoreCase(pDTO.email())) {
+
+            myUser.setEmail(pDTO.email());
+            myUser.setConfirmed(false);
+        }
+        myUser.setUsername(pDTO.username());
+        myUser.getEmployee().setName(pDTO.name());
+        myUser.getEmployee().setLastName(pDTO.lastname());
+        return this.userRepository.save(myUser);
+    }
+
+    public void deleteUser(String pId) {
+
+        this.userService.deleteUser(pId);
     }
 
 }

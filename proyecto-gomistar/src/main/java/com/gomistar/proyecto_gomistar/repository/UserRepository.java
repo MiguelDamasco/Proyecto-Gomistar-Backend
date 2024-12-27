@@ -7,7 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.gomistar.proyecto_gomistar.model.UserEntity;
+import com.gomistar.proyecto_gomistar.model.user.UserEntity;
+
 import java.util.List;
 
 

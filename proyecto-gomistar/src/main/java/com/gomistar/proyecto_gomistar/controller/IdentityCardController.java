@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gomistar.proyecto_gomistar.DTO.request.CreateIdentityCardDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.RemoveDocumentFromEmployeeDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
-import com.gomistar.proyecto_gomistar.model.AbstractDocument;
-import com.gomistar.proyecto_gomistar.model.document.IdentityCardDocument;
+import com.gomistar.proyecto_gomistar.model.user.document.AbstractDocument;
+import com.gomistar.proyecto_gomistar.model.user.document.IdentityCardDocument;
 import com.gomistar.proyecto_gomistar.service.EmployeeDocumentService;
 import com.gomistar.proyecto_gomistar.service.document.IdentityCardService;
 

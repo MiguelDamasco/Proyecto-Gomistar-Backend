@@ -9,7 +9,7 @@ import com.gomistar.proyecto_gomistar.DTO.IDocument;
 import com.gomistar.proyecto_gomistar.DTO.request.CreateEmployeeDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.EmployeeDTOModify;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
-import com.gomistar.proyecto_gomistar.model.EmployeeEntity;
+import com.gomistar.proyecto_gomistar.model.user.EmployeeEntity;
 import com.gomistar.proyecto_gomistar.repository.EmployeeRepository;
 
 @Service

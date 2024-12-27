@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
-import com.gomistar.proyecto_gomistar.model.RoleEntity;
+import com.gomistar.proyecto_gomistar.model.role.RoleEntity;
 import com.gomistar.proyecto_gomistar.service.RoleService;
 
 @RestController

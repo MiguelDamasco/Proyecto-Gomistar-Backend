@@ -3,8 +3,8 @@ package com.gomistar.proyecto_gomistar.repository.document;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
-import com.gomistar.proyecto_gomistar.model.EmployeeEntity;
-import com.gomistar.proyecto_gomistar.model.document.TextDocument;
+import com.gomistar.proyecto_gomistar.model.user.EmployeeEntity;
+import com.gomistar.proyecto_gomistar.model.user.document.TextDocument;
 
 
 @Repository

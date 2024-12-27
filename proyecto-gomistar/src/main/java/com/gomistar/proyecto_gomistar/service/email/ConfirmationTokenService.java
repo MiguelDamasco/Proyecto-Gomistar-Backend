@@ -8,8 +8,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.gomistar.proyecto_gomistar.DTO.email.EmailDTO;
-import com.gomistar.proyecto_gomistar.model.ConfirmationTokenEntity;
-import com.gomistar.proyecto_gomistar.model.UserEntity;
+import com.gomistar.proyecto_gomistar.model.email.ConfirmationTokenEntity;
+import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 import com.gomistar.proyecto_gomistar.repository.ConfirmationTokenRepository;
 
 @Service

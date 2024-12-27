@@ -16,8 +16,7 @@ import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gomistar.proyecto_gomistar.configuration.security.jwt.JwtUtils;
-import com.gomistar.proyecto_gomistar.model.UserEntity;
-
+import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -5,8 +5,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.gomistar.proyecto_gomistar.exception.RequestException;
-import com.gomistar.proyecto_gomistar.model.ERole;
-import com.gomistar.proyecto_gomistar.model.RoleEntity;
+import com.gomistar.proyecto_gomistar.model.role.ERole;
+import com.gomistar.proyecto_gomistar.model.role.RoleEntity;
 import com.gomistar.proyecto_gomistar.repository.RoleRepository;
 
 @Service

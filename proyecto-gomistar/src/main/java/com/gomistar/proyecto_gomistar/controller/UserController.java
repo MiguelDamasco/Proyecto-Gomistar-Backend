@@ -22,8 +22,8 @@ import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserPasswordDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserUsernameDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
-import com.gomistar.proyecto_gomistar.model.RoleEntity;
-import com.gomistar.proyecto_gomistar.model.UserEntity;
+import com.gomistar.proyecto_gomistar.model.role.RoleEntity;
+import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 import com.gomistar.proyecto_gomistar.service.UserEmployeeService;
 import com.gomistar.proyecto_gomistar.service.UserService;
 

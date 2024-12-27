@@ -3,7 +3,7 @@ package com.gomistar.proyecto_gomistar.model.ship;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.gomistar.proyecto_gomistar.model.UserEntity;
+import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
