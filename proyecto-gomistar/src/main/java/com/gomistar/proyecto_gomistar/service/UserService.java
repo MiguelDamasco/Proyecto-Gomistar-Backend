@@ -1,6 +1,7 @@
 package com.gomistar.proyecto_gomistar.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -66,6 +67,22 @@ public class UserService {
         }
 
         return myUserOptional.get().getId();
+    }
+
+    public List<UserEntity> findUsersWithoutShip() {
+
+        List<UserEntity> listResult = new ArrayList<>();
+        List<UserEntity> listUsers = (List<UserEntity>) this.userRepository.findAll();
+
+        for(UserEntity user : listUsers) {
+
+            if(user.getShip() == null && user.getEmployee() != null) {
+
+                listResult.add(user);
+            }
+        }
+
+        return listResult;
     }
 
     public boolean existUsername(String pUsername) {

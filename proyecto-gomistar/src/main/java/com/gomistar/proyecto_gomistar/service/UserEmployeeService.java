@@ -153,10 +153,6 @@ public class UserEmployeeService {
 
             ModifyUserPasswordDTO myDTO = (ModifyUserPasswordDTO) pUser;
             myUser = this.userService.getUser(myDTO.idUser());
-            System.out.println("idUsuario: " + myDTO.idUser());
-            System.out.println("Contraseña vieja: " + myDTO.oldPassword());
-            System.out.println("Contraseña nueva: " + myDTO.newPassword());
-            System.out.println("igualdad: " + this.passwordEncoder.matches(myDTO.oldPassword(), myUser.getPassword()));
             this.checkPassword(myUser, myDTO.newPassword(), myDTO.oldPassword());
             String newPasswordCrypt = this.passwordEncoder.encode(myDTO.newPassword());
             myUser.setPassword(newPasswordCrypt);

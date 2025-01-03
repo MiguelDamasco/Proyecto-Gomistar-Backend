@@ -52,6 +52,18 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @GetMapping("/find_All_Without_Ship")
+    public ResponseEntity<?> getAllUsersWithoutShip() {
+
+        List<UserEntity> myUsers = this.userService.findUsersWithoutShip();
+        ApiResponse<List<UserEntity>> response = new ApiResponse<>(
+            "Lista de usuarios sin embarcación asignada",
+            myUsers
+            );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @GetMapping("/getId")
     public ResponseEntity<?> getId(@RequestParam String username) {
 

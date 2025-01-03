@@ -33,7 +33,7 @@ public abstract class AbstractShip {
 
     private String name;
 
-    @OneToMany(mappedBy = "ship", targetEntity = UserEntity.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "ship", targetEntity = UserEntity.class, cascade = CascadeType.ALL, orphanRemoval = false)
     @JsonManagedReference
     private List<UserEntity> userList;
 

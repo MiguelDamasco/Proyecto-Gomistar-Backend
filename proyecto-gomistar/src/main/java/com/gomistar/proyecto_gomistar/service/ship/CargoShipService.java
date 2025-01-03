@@ -1,5 +1,6 @@
 package com.gomistar.proyecto_gomistar.service.ship;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.gomistar.proyecto_gomistar.DTO.request.ship.AddUserToShipDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.ship.cargoShip.CreateShipCargoDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.ship.cargoShip.ModifyCargoShipDTO;
+import com.gomistar.proyecto_gomistar.DTO.response.UserEmployeeResponseDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
 import com.gomistar.proyecto_gomistar.model.ship.AbstractShip;
 import com.gomistar.proyecto_gomistar.model.ship.CargoShipEntity;
@@ -31,8 +33,23 @@ public class CargoShipService {
         this.userService = pUserService;
     }
 
+    public List<CargoShipEntity> listAllCargoShip() {
+
+        List<CargoShipEntity> myFinalList = new ArrayList<>();
+        List<AbstractShip> shipList = (List<AbstractShip>) this.cargoShipRepository.findAll();
+
+        for(AbstractShip s : shipList) {
+
+            if(s instanceof CargoShipEntity)
+                myFinalList.add((CargoShipEntity) s);
+        }
+
+        return myFinalList;
+    }
+
     public List<AbstractShip> listAll() {
 
+       
         return (List<AbstractShip>) this.cargoShipRepository.findAll();
     }
 
@@ -88,4 +105,21 @@ public class CargoShipService {
 
         this.cargoShipRepository.delete(pCargoShip);
     }
+
+    public List<UserEmployeeResponseDTO> getUsers(String pId) {
+
+        CargoShipEntity myShip = this.getCargoShip(pId);
+        System.out.println("Cantidad de empleados: " + myShip.getUserList().size());
+        List<UserEntity> usersList = myShip.getUserList();
+        List<UserEmployeeResponseDTO> listDTO = new ArrayList<>();
+
+        for(UserEntity user : usersList) {
+
+            UserEmployeeResponseDTO myDTO = new UserEmployeeResponseDTO(String.valueOf(user.getId()), user.getUsername(), user.getPassword(), user.getEmail(), user.getEmployee().getName(), user.getEmployee().getLastName());
+            listDTO.add(myDTO);
+        }
+
+        return listDTO;
+    }
+
 }

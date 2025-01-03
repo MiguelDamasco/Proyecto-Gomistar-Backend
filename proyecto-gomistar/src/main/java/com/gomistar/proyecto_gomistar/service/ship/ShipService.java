@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.gomistar.proyecto_gomistar.DTO.request.ship.AddEmployeesToShipDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.ship.DeleteShipDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.ship.IModify;
 import com.gomistar.proyecto_gomistar.DTO.request.ship.ListAllShipsDTO;
@@ -16,6 +17,7 @@ import com.gomistar.proyecto_gomistar.model.ship.CargoShipEntity;
 import com.gomistar.proyecto_gomistar.model.ship.LoadTypeEntity;
 import com.gomistar.proyecto_gomistar.model.ship.PassengerShipEntity;
 import com.gomistar.proyecto_gomistar.model.user.UserEntity;
+import com.gomistar.proyecto_gomistar.service.UserService;
 
 @Service
 public class ShipService {
@@ -26,10 +28,13 @@ public class ShipService {
 
     private final LoadTypeService loadTypeService;
 
-    public ShipService(PassengerShipService pPassengerShipService, CargoShipService pCargoShipService, LoadTypeService pLoadTypeService) {
+    private final UserService userService;
+
+    public ShipService(PassengerShipService pPassengerShipService, CargoShipService pCargoShipService, LoadTypeService pLoadTypeService, UserService pUserService) {
         this.passengerShipService = pPassengerShipService;
         this.cargoShipService = pCargoShipService;
         this.loadTypeService = pLoadTypeService;
+        this.userService = pUserService;
     }
 
     //Hay que optimizarlo!!
@@ -152,5 +157,27 @@ public class ShipService {
         myShip.setUserList(userList);
 
         return this.cargoShipService.saveCargoShip(myShip);
+    }
+
+    public void removeUserFromCargoShip(String pIdUser, String pIdShip) {
+
+        UserEntity myUser = this.userService.getUser(pIdUser);
+        CargoShipEntity myShip = this.cargoShipService.getCargoShip(pIdShip);
+        myShip.removeUser(myUser);
+        this.cargoShipService.saveCargoShip(myShip);
+    }
+
+    public void addEmployeesToCargoShip(AddEmployeesToShipDTO pDTO) {
+    
+        CargoShipEntity myShip = this.cargoShipService.getCargoShip(pDTO.id());
+        List<String> myUsers = pDTO.usersList();
+
+        for(String s : myUsers) {
+
+            UserEntity myUser = this.userService.getUser(s);
+            myShip.addUser(myUser);
+        }
+
+        this.cargoShipService.saveCargoShip(myShip);
     }
 }
