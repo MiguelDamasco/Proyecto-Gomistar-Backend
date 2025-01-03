@@ -45,6 +45,11 @@ public class PassengerShipService {
         return this.passengerShipRepository.save(myShip);
     }
 
+    public PassengerShipEntity savePassengerShip(PassengerShipEntity pShip) {
+
+        return this.passengerShipRepository.save(pShip);
+    }
+
     public PassengerShipEntity modiftPassengerShip(ModifyPassengerShipDTO pDTO) {
 
         PassengerShipEntity myShip = (PassengerShipEntity)this.getPassenger(pDTO.id());
@@ -57,4 +62,11 @@ public class PassengerShipService {
         PassengerShipEntity myShip = (PassengerShipEntity)this.getPassenger(pId);
         this.passengerShipRepository.delete(myShip);
     }
+
+    public void deletePassengerShip(PassengerShipEntity pShip) {
+
+        this.passengerShipRepository.delete(pShip);
+    }
+
+    
 }

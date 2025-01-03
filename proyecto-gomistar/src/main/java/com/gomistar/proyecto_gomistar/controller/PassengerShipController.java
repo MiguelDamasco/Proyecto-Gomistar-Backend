@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gomistar.proyecto_gomistar.DTO.request.ship.ModifyPassengerShipDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.ship.PassengerShipDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.ship.cargoShip.ModifyCargoShipDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
 import com.gomistar.proyecto_gomistar.model.ship.PassengerShipEntity;
 import com.gomistar.proyecto_gomistar.model.ship.AbstractShip;
 import com.gomistar.proyecto_gomistar.service.ship.PassengerShipService;
+import com.gomistar.proyecto_gomistar.service.ship.ShipService;
 
 @RestController
 @RequestMapping("/Passenger_ship")
@@ -26,8 +28,11 @@ public class PassengerShipController {
     
     private final PassengerShipService passengerShipService;
 
-    public PassengerShipController(PassengerShipService pPassengerShipService) {
+    private final ShipService shipService;
+
+    public PassengerShipController(PassengerShipService pPassengerShipService, ShipService pShipService) {
         this.passengerShipService = pPassengerShipService;
+        this.shipService = pShipService;
     }
 
     @GetMapping("/list")
@@ -51,13 +56,25 @@ public class PassengerShipController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/modify")
+    @PutMapping("/edit")
     public ResponseEntity<?> modifyPassengerShip(@RequestBody ModifyPassengerShipDTO pDTO) {
 
         PassengerShipEntity myShip = this.passengerShipService.modiftPassengerShip(pDTO);
         ApiResponse<PassengerShipEntity> response = new ApiResponse<PassengerShipEntity>(
             "Barco de pasajeros modificado con exito!",
             myShip
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping("/passenger_to_cargo")
+    public ResponseEntity<?> modifyPassengerShipToCargoShip(@RequestBody ModifyCargoShipDTO pDTO) {
+
+        AbstractShip myShip = this.shipService.modifyShip(pDTO);
+        ApiResponse<AbstractShip> response = new ApiResponse<>(
+"Barco Modificado con exito!",
+        myShip
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);

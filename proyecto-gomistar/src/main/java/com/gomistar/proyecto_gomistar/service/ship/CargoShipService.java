@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.gomistar.proyecto_gomistar.DTO.request.ship.AddUserToShipDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.ship.cargoShip.CreateShipCargoDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.ship.cargoShip.ModifyCargoShipDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
 import com.gomistar.proyecto_gomistar.model.ship.AbstractShip;
 import com.gomistar.proyecto_gomistar.model.ship.CargoShipEntity;
@@ -54,11 +55,37 @@ public class CargoShipService {
         return this.cargoShipRepository.save(myShip);
     }
 
+    public CargoShipEntity saveCargoShip(CargoShipEntity pShip) {
+
+        return this.cargoShipRepository.save(pShip);
+    }
+
     public CargoShipEntity addUser(AddUserToShipDTO pDTO) {
         
         UserEntity myUser = this.userService.getUser(pDTO.idUser());
         CargoShipEntity myShip = this.getCargoShip(pDTO.idShip());
         myShip.addUser(myUser);
         return this.cargoShipRepository.save(myShip);
+    }
+
+    public CargoShipEntity modifyCargoShip(ModifyCargoShipDTO pDTO) {
+         
+        CargoShipEntity myShip = this.getCargoShip(pDTO.id());
+        LoadTypeEntity myLoadType = this.loadTypeService.getLoadType(pDTO.idLoad());
+        myShip.setName(pDTO.name());
+        myShip.setLoadType(myLoadType);
+
+        return this.cargoShipRepository.save(myShip);
+    }
+
+    public void deleteShip(String pId) {
+
+        CargoShipEntity myShip = this.getCargoShip(pId);
+        this.cargoShipRepository.delete(myShip);
+    }
+
+    public void deleteShip(CargoShipEntity pCargoShip) {
+
+        this.cargoShipRepository.delete(pCargoShip);
     }
 }
