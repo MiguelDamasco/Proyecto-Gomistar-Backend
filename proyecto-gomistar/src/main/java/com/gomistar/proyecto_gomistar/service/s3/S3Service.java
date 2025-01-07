@@ -35,6 +35,8 @@ public class S3Service {
 
     private String bucketName = "bucket-prueba-aws-forggstar";
 
+    private String imageSource = "https://" + bucketName +".s3.us-east-2.amazonaws.com/";
+
     public S3Service(S3Client pS3Client) {
         this.s3Client = pS3Client;
     }
@@ -43,12 +45,13 @@ public class S3Service {
       
         try {
             String fileName = file.getOriginalFilename();
+            String result = imageSource + fileName;
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
             .bucket(bucketName)
             .key(fileName)
             .build();
             s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
-            return new S3ResponseDTO(fileName);
+            return new S3ResponseDTO(result);
         }
         catch(IOException e) {
             throw new IOException("Error al subir el archivo! " + e.getMessage());

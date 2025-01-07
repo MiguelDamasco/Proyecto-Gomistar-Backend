@@ -29,9 +29,7 @@ public abstract class AbstractDocumentShip {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String name;
-
-    @ManyToOne(targetEntity = AbstractShip.class, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = AbstractShip.class)
     @JoinColumn(name = "ship_id")
     @JsonBackReference
     private AbstractShip abstractShip;

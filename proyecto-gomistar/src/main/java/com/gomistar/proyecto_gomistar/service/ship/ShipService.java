@@ -18,6 +18,8 @@ import com.gomistar.proyecto_gomistar.model.ship.LoadTypeEntity;
 import com.gomistar.proyecto_gomistar.model.ship.PassengerShipEntity;
 import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 import com.gomistar.proyecto_gomistar.service.UserService;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 public class ShipService {
@@ -37,10 +39,25 @@ public class ShipService {
         this.userService = pUserService;
     }
 
+    public AbstractShip getShip(String pId) {
+
+        return this.passengerShipService.getPassenger(pId);
+    }
+
+    public void saveShip(AbstractShip pShip) {
+
+        if(pShip instanceof CargoShipEntity) {
+            this.cargoShipService.save((CargoShipEntity) pShip);
+        }
+        else if(pShip instanceof PassengerShipEntity) {
+            this.passengerShipService.save((PassengerShipEntity) pShip);
+        }
+    }
+
     //Hay que optimizarlo!!
     public List<ListAllShipsDTO> listAllShips() {
 
-        List<AbstractShip> passengerAbstractList = this.passengerShipService.listAllPassengerShip();
+        List<AbstractShip> passengerAbstractList = this.passengerShipService.listPassengerShip();
         List<PassengerShipEntity> passengerList = new ArrayList<>();
 
         List<AbstractShip> cargoAbstractList = this.cargoShipService.listAll();
@@ -91,15 +108,23 @@ public class ShipService {
     }
 
 
+    @Transactional
     public AbstractShip modifyShip(IModify pDTO) {
-
 
         if(pDTO instanceof ModifyPassengerShipDTO) {
 
             ModifyPassengerShipDTO myDTO = (ModifyPassengerShipDTO) pDTO;
             // Cargo ship a Passenger Ship
             if(Integer.parseInt(myDTO.transform()) == 1) {
-                List<UserEntity> myList = this.passengerShipService.getPassenger(myDTO.id()).getUserList();
+                CargoShipEntity myShip = (CargoShipEntity) this.cargoShipService.getCargoShip(myDTO.id());
+                List<UserEntity> myList = new ArrayList<>();
+
+                for(UserEntity user : new ArrayList<>(myShip.getUserList())) {
+                    myList.add(user);
+                }
+
+                myShip.removeAllUsers();
+                this.cargoShipService.saveCargoShip(myShip);
                 this.cargoShipService.deleteShip(myDTO.id());
                 return cargoShipToPassengerShip(myDTO, myList);
             }  
@@ -113,7 +138,15 @@ public class ShipService {
             ModifyCargoShipDTO myDTO = (ModifyCargoShipDTO) pDTO;
             //Passanger Ship a Cargo Ship
             if(Integer.parseInt(myDTO.trnasform()) == 1) {
-                List<UserEntity> myList = this.passengerShipService.getPassenger(myDTO.id()).getUserList();
+                PassengerShipEntity myShip = (PassengerShipEntity) this.passengerShipService.getPassenger(myDTO.id());
+                List<UserEntity> myList = new ArrayList<>();
+
+                for(UserEntity user : new ArrayList<>(myShip.getUserList())) {
+                    myList.add(user);
+                }
+
+                myShip.removeAllUsers();
+                this.passengerShipService.savePassengerShip(myShip);
                 this.passengerShipService.deletePassengerShip(myDTO.id());
                 return passengerShipToCargoShip(myDTO, myList);
             }
@@ -142,7 +175,10 @@ public class ShipService {
         PassengerShipEntity myShip = PassengerShipEntity.builder().build();
         myShip.setId(Long.parseLong(pDTO.id()));
         myShip.setName(pDTO.name());
-        myShip.setUserList(userList);
+        System.out.println("Lista de usuarios a transformar: " + userList);
+        for(UserEntity user : userList) {
+            myShip.addUser(user);
+        }
         return this.passengerShipService.savePassengerShip(myShip);
 
     }
@@ -154,7 +190,10 @@ public class ShipService {
         myShip.setId(Long.parseLong(pDTO.id()));
         myShip.setName(pDTO.name());
         myShip.setLoadType(myLoad);
-        myShip.setUserList(userList);
+        System.out.println("Lista de usuarios a transformar: " + userList);
+        for(UserEntity user : userList) {
+            myShip.addUser(user);
+        }
 
         return this.cargoShipService.saveCargoShip(myShip);
     }

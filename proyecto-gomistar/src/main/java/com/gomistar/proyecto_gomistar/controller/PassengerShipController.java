@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gomistar.proyecto_gomistar.DTO.request.ship.AddEmployeesToShipDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.ship.ModifyPassengerShipDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.ship.PassengerShipDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.ship.cargoShip.ModifyCargoShipDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
+import com.gomistar.proyecto_gomistar.DTO.response.UserEmployeeResponseDTO;
 import com.gomistar.proyecto_gomistar.model.ship.PassengerShipEntity;
+import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 import com.gomistar.proyecto_gomistar.model.ship.AbstractShip;
 import com.gomistar.proyecto_gomistar.service.ship.PassengerShipService;
 import com.gomistar.proyecto_gomistar.service.ship.ShipService;
@@ -37,12 +40,26 @@ public class PassengerShipController {
 
     @GetMapping("/list")
     public ResponseEntity<?> listAllPassengerShip() {
-        List<AbstractShip> myList = this.passengerShipService.listAllPassengerShip();
-        ApiResponse<List<AbstractShip>> response = new ApiResponse<>(
+        
+        List<PassengerShipEntity> myList = this.passengerShipService.listAllPassengerShip();
+        ApiResponse<List<PassengerShipEntity>> response = new ApiResponse<>(
             "Lista de barcos de pasajeros", 
             myList);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/get_users")
+    public ResponseEntity<?> getUsers(@RequestParam String pId) {
+
+        List<UserEmployeeResponseDTO> myList = this.passengerShipService.getUsers(pId);
+        ApiResponse<List<UserEmployeeResponseDTO>> response = new ApiResponse<>(
+            "Lista de tripulantes: ",
+            myList
+            );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 
     @PostMapping("/create")
@@ -86,6 +103,29 @@ public class PassengerShipController {
         ApiResponse<PassengerShipEntity> response = new ApiResponse<PassengerShipEntity>(
             "Barco de pasajeros eliminado con exito!",
             null);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @DeleteMapping("/remove_user")
+    public ResponseEntity<?> removeUser(@RequestParam String pIdUser, @RequestParam String pIdShip) {
+
+        this.passengerShipService.removeUserFromPassengerShip(pIdUser, pIdShip);
+        ApiResponse<UserEntity> response = new ApiResponse<>(
+            "Tripulante removido!", 
+            null
+            );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/add_employees")
+    public ResponseEntity<?> addEmployees(@RequestBody AddEmployeesToShipDTO pDTO) {
+        
+        this.passengerShipService.addEmployeesToPassenger(pDTO);
+        ApiResponse<AbstractShip> response = new ApiResponse<>(
+            "Tripulantes vinculados con exito!",
+             null);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

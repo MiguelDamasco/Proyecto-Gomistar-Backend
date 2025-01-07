@@ -77,6 +77,11 @@ public class CargoShipService {
         return this.cargoShipRepository.save(pShip);
     }
 
+    public void save(CargoShipEntity pShip) {
+
+        this.cargoShipRepository.save(pShip);
+    }
+
     public CargoShipEntity addUser(AddUserToShipDTO pDTO) {
         
         UserEntity myUser = this.userService.getUser(pDTO.idUser());
@@ -109,7 +114,6 @@ public class CargoShipService {
     public List<UserEmployeeResponseDTO> getUsers(String pId) {
 
         CargoShipEntity myShip = this.getCargoShip(pId);
-        System.out.println("Cantidad de empleados: " + myShip.getUserList().size());
         List<UserEntity> usersList = myShip.getUserList();
         List<UserEmployeeResponseDTO> listDTO = new ArrayList<>();
 
