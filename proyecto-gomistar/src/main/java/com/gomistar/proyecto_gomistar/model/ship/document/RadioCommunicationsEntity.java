@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @EqualsAndHashCode(callSuper=false)
 @Entity
-@Table(name = "mandatory_insurance")
+@Table(name = "Radio_communications")
 public class RadioCommunicationsEntity extends AbstractDocumentShip {
     
     private String image;
