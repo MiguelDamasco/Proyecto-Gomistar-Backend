@@ -12,6 +12,7 @@ import com.gomistar.proyecto_gomistar.model.ship.AbstractShip;
 import com.gomistar.proyecto_gomistar.model.ship.document.AbstractDocumentShip;
 import com.gomistar.proyecto_gomistar.model.ship.document.BoatRegistrationEntity;
 import com.gomistar.proyecto_gomistar.model.ship.document.CertificateNavigabilityEntity;
+import com.gomistar.proyecto_gomistar.model.ship.document.MandatoryInsuranceEntity;
 import com.gomistar.proyecto_gomistar.model.ship.document.TechnicalInspectionEntity;
 import com.gomistar.proyecto_gomistar.service.ship.ShipService;
 
@@ -24,13 +25,16 @@ public class DocumentShipService {
 
     private final TechnicalInspectionService technicalInspectionService;
 
+    private final MandatoryInsuranceService mandatoryInsuranceService;
+
     private final ShipService shipService;
 
-    public DocumentShipService(BoatRegistrationService pBoatRegistrationService, ShipService pShipService, CertificateNavigabilityService pCertificateNavigabilityService, TechnicalInspectionService pTechnicalInspectionService) {
+    public DocumentShipService(BoatRegistrationService pBoatRegistrationService, ShipService pShipService, CertificateNavigabilityService pCertificateNavigabilityService, TechnicalInspectionService pTechnicalInspectionService, MandatoryInsuranceService pMandatoryInsuranceService) {
         this.boatRegistrationService = pBoatRegistrationService;
         this.shipService = pShipService;
         this.certificateNavigabilityService = pCertificateNavigabilityService;
         this.technicalInspectionService = pTechnicalInspectionService;
+        this.mandatoryInsuranceService = pMandatoryInsuranceService;
     }
 
     public boolean existsBoatRegistration(AbstractShip pShip) {
@@ -69,6 +73,18 @@ public class DocumentShipService {
         return false;
     }
 
+    public boolean existsMandatoryInsurance(AbstractShip pShip) {
+
+        for(AbstractDocumentShip document : new ArrayList<>(pShip.getDocumentList())) {
+
+            if(document instanceof MandatoryInsuranceEntity) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void addDocument(String pIdShip,  MultipartFile pFile, LocalDate pExpirationDate, Byte pDocumentNumber) throws IOException {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
@@ -99,6 +115,17 @@ public class DocumentShipService {
 
             if(!existsTechnicalInspection(myShip)) {
                 TechnicalInspectionEntity myDocument = this.technicalInspectionService.createTechnicalInspection(pFile, pExpirationDate);
+                myShip.addDocument(myDocument);
+                this.shipService.saveShip(myShip);
+            }
+            else {
+                throw new RequestException("P-202", "Ya existe el documento!");
+            }
+        }
+        if(pDocumentNumber == 4) {
+
+            if(!existsMandatoryInsurance(myShip)) {
+                MandatoryInsuranceEntity myDocument = this.mandatoryInsuranceService.createMandatoryInsurance(pFile, pExpirationDate);
                 myShip.addDocument(myDocument);
                 this.shipService.saveShip(myShip);
             }
