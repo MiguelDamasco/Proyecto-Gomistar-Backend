@@ -2,6 +2,7 @@ package com.gomistar.proyecto_gomistar.repository.ship.document;
 
 import org.springframework.stereotype.Repository;
 
-
 @Repository
-public interface CertificateNavigabilityRepository extends AbstractDocumentShipRepository {}
+public interface TechnicalInspectionRepository extends AbstractDocumentShipRepository {
+    
+}
