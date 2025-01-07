@@ -13,6 +13,7 @@ import com.gomistar.proyecto_gomistar.model.ship.document.AbstractDocumentShip;
 import com.gomistar.proyecto_gomistar.model.ship.document.BoatRegistrationEntity;
 import com.gomistar.proyecto_gomistar.model.ship.document.CertificateNavigabilityEntity;
 import com.gomistar.proyecto_gomistar.model.ship.document.MandatoryInsuranceEntity;
+import com.gomistar.proyecto_gomistar.model.ship.document.RadioCommunicationsEntity;
 import com.gomistar.proyecto_gomistar.model.ship.document.TechnicalInspectionEntity;
 import com.gomistar.proyecto_gomistar.service.ship.ShipService;
 
@@ -27,14 +28,17 @@ public class DocumentShipService {
 
     private final MandatoryInsuranceService mandatoryInsuranceService;
 
+    private final RadioCommunicationsService radioCommunicationsService;
+
     private final ShipService shipService;
 
-    public DocumentShipService(BoatRegistrationService pBoatRegistrationService, ShipService pShipService, CertificateNavigabilityService pCertificateNavigabilityService, TechnicalInspectionService pTechnicalInspectionService, MandatoryInsuranceService pMandatoryInsuranceService) {
+    public DocumentShipService(BoatRegistrationService pBoatRegistrationService, ShipService pShipService, CertificateNavigabilityService pCertificateNavigabilityService, TechnicalInspectionService pTechnicalInspectionService, MandatoryInsuranceService pMandatoryInsuranceService, RadioCommunicationsService pRadioCommunicationsService) {
         this.boatRegistrationService = pBoatRegistrationService;
         this.shipService = pShipService;
         this.certificateNavigabilityService = pCertificateNavigabilityService;
         this.technicalInspectionService = pTechnicalInspectionService;
         this.mandatoryInsuranceService = pMandatoryInsuranceService;
+        this.radioCommunicationsService = pRadioCommunicationsService;
     }
 
     public boolean existsBoatRegistration(AbstractShip pShip) {
@@ -85,6 +89,18 @@ public class DocumentShipService {
         return false;
     }
 
+    public boolean existsRadioCommunications(AbstractShip pShip) {
+
+        for(AbstractDocumentShip document : new ArrayList<>(pShip.getDocumentList())) {
+
+            if(document instanceof RadioCommunicationsEntity) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void addDocument(String pIdShip,  MultipartFile pFile, LocalDate pExpirationDate, Byte pDocumentNumber) throws IOException {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
@@ -100,7 +116,7 @@ public class DocumentShipService {
                 throw new RequestException("P-202", "Ya existe el documento!");
             }
         }
-        if(pDocumentNumber == 2) {
+        else if(pDocumentNumber == 2) {
 
             if(!existsCertificateNavigability(myShip)) {
                 CertificateNavigabilityEntity myDocument = this.certificateNavigabilityService.createCertificateNavigability(pFile, pExpirationDate);
@@ -111,7 +127,7 @@ public class DocumentShipService {
                 throw new RequestException("P-202", "Ya existe el documento!");
             }
         }
-        if(pDocumentNumber == 3) {
+        else if(pDocumentNumber == 3) {
 
             if(!existsTechnicalInspection(myShip)) {
                 TechnicalInspectionEntity myDocument = this.technicalInspectionService.createTechnicalInspection(pFile, pExpirationDate);
@@ -122,10 +138,21 @@ public class DocumentShipService {
                 throw new RequestException("P-202", "Ya existe el documento!");
             }
         }
-        if(pDocumentNumber == 4) {
+        else if(pDocumentNumber == 4) {
 
             if(!existsMandatoryInsurance(myShip)) {
                 MandatoryInsuranceEntity myDocument = this.mandatoryInsuranceService.createMandatoryInsurance(pFile, pExpirationDate);
+                myShip.addDocument(myDocument);
+                this.shipService.saveShip(myShip);
+            }
+            else {
+                throw new RequestException("P-202", "Ya existe el documento!");
+            }
+        }
+        else if(pDocumentNumber == 5) {
+
+            if(!existsRadioCommunications(myShip)) {
+                RadioCommunicationsEntity myDocument = this.radioCommunicationsService.createRadioCommunications(pFile, pExpirationDate);
                 myShip.addDocument(myDocument);
                 this.shipService.saveShip(myShip);
             }
