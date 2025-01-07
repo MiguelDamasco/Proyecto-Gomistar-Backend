@@ -13,6 +13,7 @@ import com.gomistar.proyecto_gomistar.model.ship.document.AbstractDocumentShip;
 import com.gomistar.proyecto_gomistar.model.ship.document.BoatRegistrationEntity;
 import com.gomistar.proyecto_gomistar.model.ship.document.CertificateNavigabilityEntity;
 import com.gomistar.proyecto_gomistar.model.ship.document.MandatoryInsuranceEntity;
+import com.gomistar.proyecto_gomistar.model.ship.document.MinimumSecurityEquipmentEntity;
 import com.gomistar.proyecto_gomistar.model.ship.document.RadioCommunicationsEntity;
 import com.gomistar.proyecto_gomistar.model.ship.document.TechnicalInspectionEntity;
 import com.gomistar.proyecto_gomistar.service.ship.ShipService;
@@ -30,15 +31,18 @@ public class DocumentShipService {
 
     private final RadioCommunicationsService radioCommunicationsService;
 
+    private final MinimumSecurityEquipmentService minimumSecurityEquipmentService;
+
     private final ShipService shipService;
 
-    public DocumentShipService(BoatRegistrationService pBoatRegistrationService, ShipService pShipService, CertificateNavigabilityService pCertificateNavigabilityService, TechnicalInspectionService pTechnicalInspectionService, MandatoryInsuranceService pMandatoryInsuranceService, RadioCommunicationsService pRadioCommunicationsService) {
+    public DocumentShipService(BoatRegistrationService pBoatRegistrationService, ShipService pShipService, CertificateNavigabilityService pCertificateNavigabilityService, TechnicalInspectionService pTechnicalInspectionService, MandatoryInsuranceService pMandatoryInsuranceService, RadioCommunicationsService pRadioCommunicationsService, MinimumSecurityEquipmentService pMinimumSecurityEquipmentService) {
         this.boatRegistrationService = pBoatRegistrationService;
         this.shipService = pShipService;
         this.certificateNavigabilityService = pCertificateNavigabilityService;
         this.technicalInspectionService = pTechnicalInspectionService;
         this.mandatoryInsuranceService = pMandatoryInsuranceService;
         this.radioCommunicationsService = pRadioCommunicationsService;
+        this.minimumSecurityEquipmentService = pMinimumSecurityEquipmentService;
     }
 
     public boolean existsBoatRegistration(AbstractShip pShip) {
@@ -101,6 +105,18 @@ public class DocumentShipService {
         return false;
     }
 
+    public boolean existsMinimumSecurityEquipment(AbstractShip pShip) {
+
+        for(AbstractDocumentShip document : new ArrayList<>(pShip.getDocumentList())) {
+
+            if(document instanceof MinimumSecurityEquipmentEntity) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void addDocument(String pIdShip,  MultipartFile pFile, LocalDate pExpirationDate, Byte pDocumentNumber) throws IOException {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
@@ -153,6 +169,17 @@ public class DocumentShipService {
 
             if(!existsRadioCommunications(myShip)) {
                 RadioCommunicationsEntity myDocument = this.radioCommunicationsService.createRadioCommunications(pFile, pExpirationDate);
+                myShip.addDocument(myDocument);
+                this.shipService.saveShip(myShip);
+            }
+            else {
+                throw new RequestException("P-202", "Ya existe el documento!");
+            }
+        }
+        else if(pDocumentNumber == 6) {
+
+            if(!existsMinimumSecurityEquipment(myShip)) {
+                MinimumSecurityEquipmentEntity myDocument = this.minimumSecurityEquipmentService.createMinimumSecurityEquipment(pFile, pExpirationDate);
                 myShip.addDocument(myDocument);
                 this.shipService.saveShip(myShip);
             }
