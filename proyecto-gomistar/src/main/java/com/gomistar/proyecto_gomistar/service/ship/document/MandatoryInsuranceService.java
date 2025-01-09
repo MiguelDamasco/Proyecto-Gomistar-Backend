@@ -23,11 +23,29 @@ public class MandatoryInsuranceService {
         this.s3Service = pS3Service;
     }
 
+    public String getFormat(String s) {
+
+        StringBuilder sb = new StringBuilder();
+
+        for(int i = 0; i < s.length(); i++) {
+
+            if(s.charAt(i) == ' ') {
+                sb.append('-');
+                continue;
+            }
+
+            sb.append(s.charAt(i));
+        }
+        return sb.toString();
+    }
+
     public MandatoryInsuranceEntity createMandatoryInsurance(MultipartFile pFile, LocalDate pExpirationDate) throws IOException {
 
         S3ResponseDTO resonse = this.s3Service.uploadFile(pFile);
 
-        MandatoryInsuranceEntity myDocument = MandatoryInsuranceEntity.builder().image(resonse.name())
+        this.s3Service.uploadDownloadFile(pFile);
+
+        MandatoryInsuranceEntity myDocument = MandatoryInsuranceEntity.builder().image(getFormat(resonse.name()))
                                                                                 .expirationDate(pExpirationDate)
                                                                                 .build();
 

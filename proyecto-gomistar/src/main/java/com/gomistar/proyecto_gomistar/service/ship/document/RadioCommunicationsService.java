@@ -27,6 +27,8 @@ public class RadioCommunicationsService {
 
         S3ResponseDTO response = this.s3Service.uploadFile(pFile);
 
+        this.s3Service.uploadDownloadFile(pFile);
+
         RadioCommunicationsEntity myDocument = RadioCommunicationsEntity.builder().image(response.name()).expirationDate(pExpirationDate).build();
 
         return this.radioCommunicationsRepository.save(myDocument);

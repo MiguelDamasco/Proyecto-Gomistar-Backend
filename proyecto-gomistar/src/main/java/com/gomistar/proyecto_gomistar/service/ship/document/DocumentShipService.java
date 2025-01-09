@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.gomistar.proyecto_gomistar.DTO.response.ShipDocumentResponseDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
 import com.gomistar.proyecto_gomistar.model.ship.AbstractShip;
 import com.gomistar.proyecto_gomistar.model.ship.document.AbstractDocumentShip;
@@ -117,6 +118,43 @@ public class DocumentShipService {
         return false;
     }
 
+    public String[] getAmountDocuments(String pIdShip) {
+
+        String[] result = new String[6];
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        for(AbstractDocumentShip document : new ArrayList<>(myShip.getDocumentList())) {
+
+            if(document instanceof BoatRegistrationEntity) {
+                result[0] = "1";
+                continue;
+            }
+            else if(document instanceof CertificateNavigabilityEntity) {
+                result[1] = "1";
+                continue;
+            }
+            else if(document instanceof TechnicalInspectionEntity) {
+                result[2] = "1";
+                continue;
+            }
+            else if(document instanceof MandatoryInsuranceEntity) {
+                result[3] = "1";
+                continue;
+            }
+            else if(document instanceof RadioCommunicationsEntity) {
+                result[4] = "1";
+                continue;
+            }
+            else if(document instanceof MinimumSecurityEquipmentEntity) {
+                result[5] = "1";
+            }
+        }
+
+        return result;
+    }
+
+
+
     public void addDocument(String pIdShip,  MultipartFile pFile, LocalDate pExpirationDate, Byte pDocumentNumber) throws IOException {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
@@ -187,5 +225,56 @@ public class DocumentShipService {
                 throw new RequestException("P-202", "Ya existe el documento!");
             }
         }
+    }
+
+    public String getDate(LocalDate pDate) {
+        
+        String[] myMonths = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre",
+                                "Octubre", "Noviembre", "Diciembre"};
+
+        int day = pDate.getDayOfMonth();
+        String month = myMonths[pDate.getMonthValue() - 1];
+        int year = pDate.getYear();
+        String result = day + " de " + month + " del año " + year;
+
+        return result;
+    }
+
+    public ShipDocumentResponseDTO getBoatRegistration(String pIdShip) {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        for(AbstractDocumentShip document : new ArrayList<>(myShip.getDocumentList())) {
+
+            if(document instanceof BoatRegistrationEntity) {
+
+                BoatRegistrationEntity myBoatRegistration = (BoatRegistrationEntity) document;
+                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), getDate(myBoatRegistration.getExpirationDate()));
+                return myDTO;
+            }
+        }
+
+        return null;
+    }
+
+    public void deleteBoatRegistration(String pIdShip) throws IOException {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        BoatRegistrationEntity myDocument = this.boatRegistrationService.deleteBoatRegistration(myShip);
+
+        if(existsBoatRegistration(myShip)) {
+
+            myShip.removeDocument(myDocument);
+            this.shipService.saveShip(myShip);
+        }
+
+    }
+
+    public String getDownloadBoatRegistration(String pIdShip) {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        return this.boatRegistrationService.getDownload(myShip);
     }
 }

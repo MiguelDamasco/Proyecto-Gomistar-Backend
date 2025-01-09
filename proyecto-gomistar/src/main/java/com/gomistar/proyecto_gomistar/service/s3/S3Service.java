@@ -33,7 +33,11 @@ public class S3Service {
 
     private final S3Client s3Client;
 
-    private String bucketName = "bucket-prueba-aws-forggstar";
+    private String bucketName = "froggstar11";
+
+    private String bucketNameDownload = "descargas-gomistar";
+
+    private String imageDownloadSource = "https://" + bucketNameDownload +".s3.us-east-2.amazonaws.com/";
 
     private String imageSource = "https://" + bucketName +".s3.us-east-2.amazonaws.com/";
 
@@ -46,9 +50,31 @@ public class S3Service {
         try {
             String fileName = file.getOriginalFilename();
             String result = imageSource + fileName;
+            String contentType = "image/jpeg";
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
             .bucket(bucketName)
             .key(fileName)
+            .contentType(contentType)
+            .build();
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
+            return new S3ResponseDTO(result);
+        }
+        catch(IOException e) {
+            throw new IOException("Error al subir el archivo! " + e.getMessage());
+
+        }
+    }
+
+    public S3ResponseDTO uploadDownloadFile(MultipartFile file) throws IOException {
+      
+        try {
+            String fileName = file.getOriginalFilename();
+            String result = imageDownloadSource + fileName;
+            String contentType = "application/octet-stream";
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+            .bucket(bucketNameDownload)
+            .key(fileName)
+            .contentType(contentType)
             .build();
             s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
             return new S3ResponseDTO(result);
@@ -64,6 +90,25 @@ public class S3Service {
         try {
             HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
                                                     .bucket(bucketName)
+                                                    .key(objcectKey)
+                                                    .build();
+            
+            s3Client.headObject(headObjectRequest);
+        }
+        catch (S3Exception e) {
+            if(e.statusCode() == 404)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean doesObjectDownloadExist(String objcectKey) {
+
+        try {
+            HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
+                                                    .bucket(bucketNameDownload)
                                                     .key(objcectKey)
                                                     .build();
             
@@ -144,6 +189,26 @@ public class S3Service {
         try {
             DeleteObjectRequest request = DeleteObjectRequest.builder()
                                                             .bucket(bucketName)
+                                                            .key(filename)
+                                                            .build();
+
+            s3Client.deleteObject(request);
+            return "Objeto " + filename + " eliminado con exito";
+        }
+        catch (S3Exception e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    public String deletDownloadFile(String filename) throws IOException {
+
+        if(!doesObjectDownloadExist(filename)) {
+            throw new RequestException("P-299", "El archivo NO existe!");
+        }
+
+        try {
+            DeleteObjectRequest request = DeleteObjectRequest.builder()
+                                                            .bucket(bucketNameDownload)
                                                             .key(filename)
                                                             .build();
 

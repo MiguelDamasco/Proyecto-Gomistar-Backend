@@ -27,6 +27,8 @@ public class CertificateNavigabilityService {
 
         S3ResponseDTO response = this.s3Service.uploadFile(pFile);
 
+        this.s3Service.uploadDownloadFile(pFile);
+
         CertificateNavigabilityEntity myDocument = CertificateNavigabilityEntity.builder().image(response.name())
                                                                                             .expirationDate(pExpirationDate)
                                                                                             .build();

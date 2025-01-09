@@ -28,6 +28,8 @@ public class TechnicalInspectionService {
 
         S3ResponseDTO response = this.s3Service.uploadFile(pFile);
 
+        this.s3Service.uploadDownloadFile(pFile);
+
         TechnicalInspectionEntity myDocument = TechnicalInspectionEntity.builder().image(response.name())
                                                                                             .expirationDate(pExpirationDate)
                                                                                             .build();

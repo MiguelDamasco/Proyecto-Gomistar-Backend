@@ -27,6 +27,8 @@ public class MinimumSecurityEquipmentService {
         
         S3ResponseDTO response = this.s3Service.uploadFile(pFile);
 
+        this.s3Service.uploadDownloadFile(pFile);
+
         MinimumSecurityEquipmentEntity myDocument = MinimumSecurityEquipmentEntity.builder().image(response.name())
                                                                                             .expirationDate(pExpirationDate)
                                                                                             .build();
