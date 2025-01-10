@@ -291,6 +291,23 @@ public class DocumentShipService {
         return null;
     }
 
+    public ShipDocumentResponseDTO getMandatoryInsurance(String pIdShip) {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        for(AbstractDocumentShip document : new ArrayList<>(myShip.getDocumentList())) {
+
+            if(document instanceof MandatoryInsuranceEntity) {
+
+                MandatoryInsuranceEntity myBoatRegistration = (MandatoryInsuranceEntity) document;
+                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), getDate(myBoatRegistration.getExpirationDate()));
+                return myDTO;
+            }
+        }
+
+        return null;
+    }
+
     public void deleteBoatRegistration(String pIdShip) throws IOException {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
@@ -333,6 +350,20 @@ public class DocumentShipService {
 
     }
 
+    public void deleteMandatoryInsurance(String pIdShip) throws IOException {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        MandatoryInsuranceEntity myDocument = this.mandatoryInsuranceService.deleteBoatRegistration(myShip);
+
+        if(existsMandatoryInsurance(myShip)) {
+
+            myShip.removeDocument(myDocument);
+            this.shipService.saveShip(myShip);
+        }
+
+    }
+
     public String getDownloadBoatRegistration(String pIdShip) {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
@@ -352,5 +383,12 @@ public class DocumentShipService {
         AbstractShip myShip = this.shipService.getShip(pIdShip);
 
         return this.technicalInspectionService.getDownload(myShip);
+    }
+
+    public String getDownloadMandatoryInsurance(String pIdShip) {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        return this.mandatoryInsuranceService.getDownload(myShip);
     }
 }
