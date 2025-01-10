@@ -325,6 +325,23 @@ public class DocumentShipService {
         return null;
     }
 
+    public ShipDocumentResponseDTO getMinimumSecurityEquipment(String pIdShip) {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        for(AbstractDocumentShip document : new ArrayList<>(myShip.getDocumentList())) {
+
+            if(document instanceof MinimumSecurityEquipmentEntity) {
+
+                MinimumSecurityEquipmentEntity myBoatRegistration = (MinimumSecurityEquipmentEntity) document;
+                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), getDate(myBoatRegistration.getExpirationDate()));
+                return myDTO;
+            }
+        }
+
+        return null;
+    }
+
     public void deleteBoatRegistration(String pIdShip) throws IOException {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
@@ -394,6 +411,19 @@ public class DocumentShipService {
 
     }
 
+    public void deleteMinimumSecurityEquipment(String pIdShip) throws IOException {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        MinimumSecurityEquipmentEntity myDocument = this.minimumSecurityEquipmentService.deleteBoatRegistration(myShip);
+        if(existsMinimumSecurityEquipment(myShip)) {
+
+            myShip.removeDocument(myDocument);
+            this.shipService.saveShip(myShip);
+        }
+
+    }
+
     public String getDownloadBoatRegistration(String pIdShip) {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
@@ -422,10 +452,17 @@ public class DocumentShipService {
         return this.mandatoryInsuranceService.getDownload(myShip);
     }
 
-    public String getDownloadRadioCommunicationsEntity(String pIdShip) {
+    public String getDownloadRadioCommunications(String pIdShip) {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
 
         return this.radioCommunicationsService.getDownload(myShip);
+    }
+
+    public String getDownloadMinimumSecurityEquipment(String pIdShip) {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        return this.minimumSecurityEquipmentService.getDownload(myShip);
     }
 }

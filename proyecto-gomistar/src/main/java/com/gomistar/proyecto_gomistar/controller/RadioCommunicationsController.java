@@ -47,7 +47,7 @@ public class RadioCommunicationsController {
     @GetMapping("/download_image")
     public ResponseEntity<?> getDownloadImage(@RequestParam String pIdShip) {
 
-        String imageURL = this.documentShipService.getDownloadRadioCommunicationsEntity(pIdShip);
+        String imageURL = this.documentShipService.getDownloadRadioCommunications(pIdShip);
         ApiResponse<String> response = new ApiResponse<>(
         "Imagen encontada!",
         imageURL
