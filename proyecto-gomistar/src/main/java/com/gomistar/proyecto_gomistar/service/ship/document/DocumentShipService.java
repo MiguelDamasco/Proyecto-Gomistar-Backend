@@ -257,6 +257,23 @@ public class DocumentShipService {
         return null;
     }
 
+    public ShipDocumentResponseDTO getCertificateNavigability(String pIdShip) {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        for(AbstractDocumentShip document : new ArrayList<>(myShip.getDocumentList())) {
+
+            if(document instanceof CertificateNavigabilityEntity) {
+
+                CertificateNavigabilityEntity myBoatRegistration = (CertificateNavigabilityEntity) document;
+                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), getDate(myBoatRegistration.getExpirationDate()));
+                return myDTO;
+            }
+        }
+
+        return null;
+    }
+
     public void deleteBoatRegistration(String pIdShip) throws IOException {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
@@ -271,10 +288,31 @@ public class DocumentShipService {
 
     }
 
+    public void deleteCertificateNavigability(String pIdShip) throws IOException {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        CertificateNavigabilityEntity myDocument = this.certificateNavigabilityService.deleteBoatRegistration(myShip);
+
+        if(existsCertificateNavigability(myShip)) {
+
+            myShip.removeDocument(myDocument);
+            this.shipService.saveShip(myShip);
+        }
+
+    }
+
     public String getDownloadBoatRegistration(String pIdShip) {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
 
         return this.boatRegistrationService.getDownload(myShip);
+    }
+
+    public String getDownloadCertificateNavigability(String pIdShip) {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        return this.certificateNavigabilityService.getDownload(myShip);
     }
 }

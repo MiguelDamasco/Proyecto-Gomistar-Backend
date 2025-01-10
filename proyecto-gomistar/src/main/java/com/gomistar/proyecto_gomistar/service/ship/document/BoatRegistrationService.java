@@ -90,17 +90,6 @@ public class BoatRegistrationService {
     }
 
 
-    public BoatRegistrationEntity findById(String pIdShip) {
-
-        Optional<AbstractDocumentShip> myShipOptional = this.boatRegistrationRepository.findById(Long.parseLong(pIdShip));
-
-        if(!myShipOptional.isPresent()) {
-            throw new RequestException("p-203", "Documento no encontrado!");
-        }
-
-        return (BoatRegistrationEntity) myShipOptional.get();
-    }
-
     public String getDownload(AbstractShip pShip) {
 
         BoatRegistrationEntity myDocument = null;
