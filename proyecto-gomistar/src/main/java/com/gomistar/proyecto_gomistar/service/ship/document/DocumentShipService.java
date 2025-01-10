@@ -274,6 +274,23 @@ public class DocumentShipService {
         return null;
     }
 
+    public ShipDocumentResponseDTO getTechnicalInspection(String pIdShip) {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        for(AbstractDocumentShip document : new ArrayList<>(myShip.getDocumentList())) {
+
+            if(document instanceof TechnicalInspectionEntity) {
+
+                TechnicalInspectionEntity myBoatRegistration = (TechnicalInspectionEntity) document;
+                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), getDate(myBoatRegistration.getExpirationDate()));
+                return myDTO;
+            }
+        }
+
+        return null;
+    }
+
     public void deleteBoatRegistration(String pIdShip) throws IOException {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
@@ -302,6 +319,20 @@ public class DocumentShipService {
 
     }
 
+    public void deleteTechnicalInspection(String pIdShip) throws IOException {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        TechnicalInspectionEntity myDocument = this.technicalInspectionService.deleteBoatRegistration(myShip);
+
+        if(existsTechnicalInspection(myShip)) {
+
+            myShip.removeDocument(myDocument);
+            this.shipService.saveShip(myShip);
+        }
+
+    }
+
     public String getDownloadBoatRegistration(String pIdShip) {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
@@ -314,5 +345,12 @@ public class DocumentShipService {
         AbstractShip myShip = this.shipService.getShip(pIdShip);
 
         return this.certificateNavigabilityService.getDownload(myShip);
+    }
+
+    public String getDownloadTechnicalInspection(String pIdShip) {
+
+        AbstractShip myShip = this.shipService.getShip(pIdShip);
+
+        return this.technicalInspectionService.getDownload(myShip);
     }
 }
