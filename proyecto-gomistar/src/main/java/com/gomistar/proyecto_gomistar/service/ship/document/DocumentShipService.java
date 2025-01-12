@@ -423,14 +423,18 @@ public class DocumentShipService {
 
     }
 
-    public void deleteRadioCommunicationsEntity(String pIdShip) throws IOException {
+    public void deleteRadioCommunicationsEntity(String pIdShip, String pType) throws IOException {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
 
         RadioCommunicationsEntity myDocument = this.radioCommunicationsService.deleteBoatRegistration(myShip);
-        if(existsRadioCommunications(myShip)) {
+        
+        ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
+
+        if(existsCertificateNavigability(myShip)) {
 
             myShip.removeDocument(myDocument);
+            myShip.removeAlert(myAlert);
             this.shipService.saveShip(myShip);
         }
 

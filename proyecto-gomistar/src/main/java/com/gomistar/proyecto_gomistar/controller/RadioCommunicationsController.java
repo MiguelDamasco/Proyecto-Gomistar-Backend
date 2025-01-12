@@ -80,9 +80,9 @@ public class RadioCommunicationsController {
     }
 
     @DeleteMapping("/delete_document")
-    public ResponseEntity<?> deleteDocument(@RequestParam String pIdShip) throws IOException {
+    public ResponseEntity<?> deleteDocument(@RequestParam String pIdShip, @RequestParam String pType) throws IOException {
 
-        this.documentShipService.deleteRadioCommunicationsEntity(pIdShip);
+        this.documentShipService.deleteRadioCommunicationsEntity(pIdShip, pType);
         ApiResponse<RadioCommunicationsEntity> response = new ApiResponse<>("Documento eliminado!"
         , null
         );
