@@ -26,4 +26,6 @@ public class ShipAlertEntity extends AbstractAlert {
     @JoinColumn(name = "id_ship")
     @JsonBackReference
     private AbstractShip ship;
+
+    private byte type;
 }

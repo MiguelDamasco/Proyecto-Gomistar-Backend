@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.gomistar.proyecto_gomistar.DTO.response.ShipDocumentResponseDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
+import com.gomistar.proyecto_gomistar.model.alert.ShipAlertEntity;
 import com.gomistar.proyecto_gomistar.model.ship.AbstractShip;
 import com.gomistar.proyecto_gomistar.model.ship.document.AbstractDocumentShip;
 import com.gomistar.proyecto_gomistar.model.ship.document.BoatRegistrationEntity;
@@ -352,15 +353,18 @@ public class DocumentShipService {
         return null;
     }
 
-    public void deleteBoatRegistration(String pIdShip) throws IOException {
+    public void deleteBoatRegistration(String pIdShip, String pType) throws IOException {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
 
         BoatRegistrationEntity myDocument = this.boatRegistrationService.deleteBoatRegistration(myShip);
 
+        ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
+
         if(existsBoatRegistration(myShip)) {
 
             myShip.removeDocument(myDocument);
+            myShip.removeAlert(myAlert);
             this.shipService.saveShip(myShip);
         }
 

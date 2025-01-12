@@ -79,7 +79,7 @@ public class CertificateNavigabilityController {
     }
 
     @DeleteMapping("/delete_document")
-    public ResponseEntity<?> deleteDocument(@RequestParam String pIdShip) throws IOException {
+    public ResponseEntity<?> deleteDocument(@RequestParam String pIdShip, @RequestParam String pType) throws IOException {
 
         this.documentShipService.deleteCertificateNavigability(pIdShip);
         ApiResponse<CertificateNavigabilityEntity> response = new ApiResponse<CertificateNavigabilityEntity>("Documento eliminado!"

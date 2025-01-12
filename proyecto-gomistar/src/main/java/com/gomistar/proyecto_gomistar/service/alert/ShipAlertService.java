@@ -22,6 +22,19 @@ public class ShipAlertService {
         this.shipAlertRepository = pShipAlertRepository;
     }
 
+    public ShipAlertEntity getByType(AbstractShip pShip ,Byte pType) {
+
+        for(ShipAlertEntity alert : new ArrayList<>(pShip.getAlertList())) {
+
+            if(alert.getType() == pType) {
+                return alert;
+            }
+        }
+
+        return null;
+
+    }
+
     public List<ShipAlertEntity> listAll() {
 
         List<ShipAlertEntity> result = new ArrayList<>();
@@ -66,10 +79,15 @@ public class ShipAlertService {
         return this.shipAlertRepository.save(myAlert);
     }
 
-    public void deleteShipAlert(String pId) {
+    public void deleteShipAlertById(String pId) {
 
         ShipAlertEntity myAlert = this.getAlert(pId);
 
         this.shipAlertRepository.delete(myAlert);
+    }
+
+    public void deleteShipAlert(ShipAlertEntity pAlert) {
+
+        this.shipAlertRepository.delete(pAlert);
     }
 }

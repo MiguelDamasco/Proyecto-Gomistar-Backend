@@ -79,9 +79,9 @@ public class BoatRegistrationController {
     }
 
     @DeleteMapping("/delete_document")
-    public ResponseEntity<?> deleteDocument(@RequestParam String pIdShip) throws IOException {
+    public ResponseEntity<?> deleteDocument(@RequestParam String pIdShip, @RequestParam String pType) throws IOException {
 
-        this.documentShipService.deleteBoatRegistration(pIdShip);
+        this.documentShipService.deleteBoatRegistration(pIdShip, pType);
         ApiResponse<BoatRegistrationEntity> response = new ApiResponse<BoatRegistrationEntity>("Documento eliminado!"
         , null
         );
