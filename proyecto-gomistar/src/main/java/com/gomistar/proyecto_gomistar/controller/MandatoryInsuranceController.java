@@ -79,9 +79,9 @@ public class MandatoryInsuranceController {
     }
 
     @DeleteMapping("/delete_document")
-    public ResponseEntity<?> deleteDocument(@RequestParam String pIdShip) throws IOException {
+    public ResponseEntity<?> deleteDocument(@RequestParam String pIdShip, @RequestParam String pType) throws IOException {
 
-        this.documentShipService.deleteMandatoryInsurance(pIdShip);
+        this.documentShipService.deleteMandatoryInsurance(pIdShip, pType);
         ApiResponse<MandatoryInsuranceEntity> response = new ApiResponse<>("Documento eliminado!"
         , null
         );

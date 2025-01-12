@@ -406,15 +406,18 @@ public class DocumentShipService {
 
     }
 
-    public void deleteMandatoryInsurance(String pIdShip) throws IOException {
+    public void deleteMandatoryInsurance(String pIdShip, String pType) throws IOException {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
 
         MandatoryInsuranceEntity myDocument = this.mandatoryInsuranceService.deleteBoatRegistration(myShip);
 
-        if(existsMandatoryInsurance(myShip)) {
+        ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
+
+        if(existsCertificateNavigability(myShip)) {
 
             myShip.removeDocument(myDocument);
+            myShip.removeAlert(myAlert);
             this.shipService.saveShip(myShip);
         }
 
