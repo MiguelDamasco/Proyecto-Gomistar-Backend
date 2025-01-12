@@ -61,11 +61,12 @@ public class ShipAlertService {
         return (ShipAlertEntity) myAlertOptional.get();
     }
 
-    public ShipAlertEntity createShipAlert(LocalDate pDate, AbstractShip pShip) {
+    public ShipAlertEntity createShipAlert(LocalDate pDate, AbstractShip pShip, Byte pType) {
 
         ShipAlertEntity myAlert = ShipAlertEntity.builder().build();
         myAlert.setDate(pDate);
         myAlert.setShip(pShip);
+        myAlert.setType(pType);
 
         return this.shipAlertRepository.save(myAlert);
     }

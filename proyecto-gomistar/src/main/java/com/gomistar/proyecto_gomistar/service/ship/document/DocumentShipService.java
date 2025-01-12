@@ -170,7 +170,7 @@ public class DocumentShipService {
                BoatRegistrationEntity myDocument = this.boatRegistrationService.createBoatRegistration(pFile, pExpirationDate);
                myShip.addDocument(myDocument);
                this.shipService.saveShip(myShip);
-               this.shipAlertService.createShipAlert(pExpirationDate, myShip);
+               this.shipAlertService.createShipAlert(pExpirationDate, myShip, Byte.valueOf("1"));
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");
@@ -182,7 +182,7 @@ public class DocumentShipService {
                 CertificateNavigabilityEntity myDocument = this.certificateNavigabilityService.createCertificateNavigability(pFile, pExpirationDate);
                 myShip.addDocument(myDocument);
                 this.shipService.saveShip(myShip);
-                this.shipAlertService.createShipAlert(pExpirationDate, myShip);
+                this.shipAlertService.createShipAlert(pExpirationDate, myShip, Byte.valueOf("2"));
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");
@@ -194,7 +194,7 @@ public class DocumentShipService {
                 TechnicalInspectionEntity myDocument = this.technicalInspectionService.createTechnicalInspection(pFile, pExpirationDate);
                 myShip.addDocument(myDocument);
                 this.shipService.saveShip(myShip);
-                this.shipAlertService.createShipAlert(pExpirationDate, myShip);
+                this.shipAlertService.createShipAlert(pExpirationDate, myShip, Byte.valueOf("3"));
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");
@@ -206,7 +206,7 @@ public class DocumentShipService {
                 MandatoryInsuranceEntity myDocument = this.mandatoryInsuranceService.createMandatoryInsurance(pFile, pExpirationDate);
                 myShip.addDocument(myDocument);
                 this.shipService.saveShip(myShip);
-                this.shipAlertService.createShipAlert(pExpirationDate, myShip);
+                this.shipAlertService.createShipAlert(pExpirationDate, myShip, Byte.valueOf("4"));
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");
@@ -218,7 +218,7 @@ public class DocumentShipService {
                 RadioCommunicationsEntity myDocument = this.radioCommunicationsService.createRadioCommunications(pFile, pExpirationDate);
                 myShip.addDocument(myDocument);
                 this.shipService.saveShip(myShip);
-                this.shipAlertService.createShipAlert(pExpirationDate, myShip);
+                this.shipAlertService.createShipAlert(pExpirationDate, myShip, Byte.valueOf("5"));
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");
@@ -230,7 +230,7 @@ public class DocumentShipService {
                 MinimumSecurityEquipmentEntity myDocument = this.minimumSecurityEquipmentService.createMinimumSecurityEquipment(pFile, pExpirationDate);
                 myShip.addDocument(myDocument);
                 this.shipService.saveShip(myShip);
-                this.shipAlertService.createShipAlert(pExpirationDate, myShip);
+                this.shipAlertService.createShipAlert(pExpirationDate, myShip, Byte.valueOf("6"));
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");
@@ -370,29 +370,37 @@ public class DocumentShipService {
 
     }
 
-    public void deleteCertificateNavigability(String pIdShip) throws IOException {
+    public void deleteCertificateNavigability(String pIdShip, String pType) throws IOException {
 
+        System.out.println("pIdShip: [" + pIdShip + " ]" );
+        System.out.println("pType: [" + pType + " ]" );
         AbstractShip myShip = this.shipService.getShip(pIdShip);
 
         CertificateNavigabilityEntity myDocument = this.certificateNavigabilityService.deleteBoatRegistration(myShip);
 
+        ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
+
         if(existsCertificateNavigability(myShip)) {
 
             myShip.removeDocument(myDocument);
+            myShip.removeAlert(myAlert);
             this.shipService.saveShip(myShip);
         }
 
     }
 
-    public void deleteTechnicalInspection(String pIdShip) throws IOException {
+    public void deleteTechnicalInspection(String pIdShip, String pType) throws IOException {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
 
         TechnicalInspectionEntity myDocument = this.technicalInspectionService.deleteBoatRegistration(myShip);
 
-        if(existsTechnicalInspection(myShip)) {
+        ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
+
+        if(existsCertificateNavigability(myShip)) {
 
             myShip.removeDocument(myDocument);
+            myShip.removeAlert(myAlert);
             this.shipService.saveShip(myShip);
         }
 
