@@ -440,14 +440,18 @@ public class DocumentShipService {
 
     }
 
-    public void deleteMinimumSecurityEquipment(String pIdShip) throws IOException {
+    public void deleteMinimumSecurityEquipment(String pIdShip, String pType) throws IOException {
 
         AbstractShip myShip = this.shipService.getShip(pIdShip);
 
         MinimumSecurityEquipmentEntity myDocument = this.minimumSecurityEquipmentService.deleteBoatRegistration(myShip);
-        if(existsMinimumSecurityEquipment(myShip)) {
+        
+        ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
+
+        if(existsCertificateNavigability(myShip)) {
 
             myShip.removeDocument(myDocument);
+            myShip.removeAlert(myAlert);
             this.shipService.saveShip(myShip);
         }
 

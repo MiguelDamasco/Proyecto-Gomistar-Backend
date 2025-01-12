@@ -79,9 +79,9 @@ public class MinimumSecurityEquipmentController {
     }
 
     @DeleteMapping("/delete_document")
-    public ResponseEntity<?> deleteDocument(@RequestParam String pIdShip) throws IOException {
+    public ResponseEntity<?> deleteDocument(@RequestParam String pIdShip, @RequestParam String pType) throws IOException {
 
-        this.documentShipService.deleteMinimumSecurityEquipment(pIdShip);
+        this.documentShipService.deleteMinimumSecurityEquipment(pIdShip, pType);
         ApiResponse<MinimumSecurityEquipmentEntity> response = new ApiResponse<>("Documento eliminado!"
         , null
         );
