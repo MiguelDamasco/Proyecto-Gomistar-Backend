@@ -17,6 +17,7 @@ import com.gomistar.proyecto_gomistar.model.ship.document.MandatoryInsuranceEnti
 import com.gomistar.proyecto_gomistar.model.ship.document.MinimumSecurityEquipmentEntity;
 import com.gomistar.proyecto_gomistar.model.ship.document.RadioCommunicationsEntity;
 import com.gomistar.proyecto_gomistar.model.ship.document.TechnicalInspectionEntity;
+import com.gomistar.proyecto_gomistar.service.alert.ShipAlertService;
 import com.gomistar.proyecto_gomistar.service.ship.ShipService;
 
 @Service
@@ -36,7 +37,9 @@ public class DocumentShipService {
 
     private final ShipService shipService;
 
-    public DocumentShipService(BoatRegistrationService pBoatRegistrationService, ShipService pShipService, CertificateNavigabilityService pCertificateNavigabilityService, TechnicalInspectionService pTechnicalInspectionService, MandatoryInsuranceService pMandatoryInsuranceService, RadioCommunicationsService pRadioCommunicationsService, MinimumSecurityEquipmentService pMinimumSecurityEquipmentService) {
+    private final ShipAlertService shipAlertService;
+
+    public DocumentShipService(BoatRegistrationService pBoatRegistrationService, ShipService pShipService, CertificateNavigabilityService pCertificateNavigabilityService, TechnicalInspectionService pTechnicalInspectionService, MandatoryInsuranceService pMandatoryInsuranceService, RadioCommunicationsService pRadioCommunicationsService, MinimumSecurityEquipmentService pMinimumSecurityEquipmentService, ShipAlertService pShipAlertService) {
         this.boatRegistrationService = pBoatRegistrationService;
         this.shipService = pShipService;
         this.certificateNavigabilityService = pCertificateNavigabilityService;
@@ -44,6 +47,7 @@ public class DocumentShipService {
         this.mandatoryInsuranceService = pMandatoryInsuranceService;
         this.radioCommunicationsService = pRadioCommunicationsService;
         this.minimumSecurityEquipmentService = pMinimumSecurityEquipmentService;
+        this.shipAlertService = pShipAlertService;
     }
 
     public boolean existsBoatRegistration(AbstractShip pShip) {
@@ -165,6 +169,7 @@ public class DocumentShipService {
                BoatRegistrationEntity myDocument = this.boatRegistrationService.createBoatRegistration(pFile, pExpirationDate);
                myShip.addDocument(myDocument);
                this.shipService.saveShip(myShip);
+               this.shipAlertService.createShipAlert(pExpirationDate, myShip);
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");
@@ -176,6 +181,7 @@ public class DocumentShipService {
                 CertificateNavigabilityEntity myDocument = this.certificateNavigabilityService.createCertificateNavigability(pFile, pExpirationDate);
                 myShip.addDocument(myDocument);
                 this.shipService.saveShip(myShip);
+                this.shipAlertService.createShipAlert(pExpirationDate, myShip);
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");
@@ -187,6 +193,7 @@ public class DocumentShipService {
                 TechnicalInspectionEntity myDocument = this.technicalInspectionService.createTechnicalInspection(pFile, pExpirationDate);
                 myShip.addDocument(myDocument);
                 this.shipService.saveShip(myShip);
+                this.shipAlertService.createShipAlert(pExpirationDate, myShip);
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");
@@ -198,6 +205,7 @@ public class DocumentShipService {
                 MandatoryInsuranceEntity myDocument = this.mandatoryInsuranceService.createMandatoryInsurance(pFile, pExpirationDate);
                 myShip.addDocument(myDocument);
                 this.shipService.saveShip(myShip);
+                this.shipAlertService.createShipAlert(pExpirationDate, myShip);
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");
@@ -209,6 +217,7 @@ public class DocumentShipService {
                 RadioCommunicationsEntity myDocument = this.radioCommunicationsService.createRadioCommunications(pFile, pExpirationDate);
                 myShip.addDocument(myDocument);
                 this.shipService.saveShip(myShip);
+                this.shipAlertService.createShipAlert(pExpirationDate, myShip);
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");
@@ -220,6 +229,7 @@ public class DocumentShipService {
                 MinimumSecurityEquipmentEntity myDocument = this.minimumSecurityEquipmentService.createMinimumSecurityEquipment(pFile, pExpirationDate);
                 myShip.addDocument(myDocument);
                 this.shipService.saveShip(myShip);
+                this.shipAlertService.createShipAlert(pExpirationDate, myShip);
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");

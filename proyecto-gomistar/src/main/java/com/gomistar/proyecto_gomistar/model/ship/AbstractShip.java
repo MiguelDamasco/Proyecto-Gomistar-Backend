@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.gomistar.proyecto_gomistar.model.alert.ShipAlertEntity;
 import com.gomistar.proyecto_gomistar.model.ship.document.AbstractDocumentShip;
 import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 
@@ -42,6 +43,9 @@ public abstract class AbstractShip {
     @OneToMany(mappedBy = "abstractShip", targetEntity = AbstractDocumentShip.class, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<AbstractDocumentShip> documentList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "ship", targetEntity = ShipAlertEntity.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ShipAlertEntity> alertList = new ArrayList<>();
 
     public void addUser(UserEntity pUser) {
         pUser.setShip(this);
@@ -83,5 +87,24 @@ public abstract class AbstractShip {
         }
     }
 
+    public void addAlert(ShipAlertEntity pAlert) {
+        pAlert.setShip(this);
+        this.alertList.add(pAlert);
+    }
+
+    public void removeAlert(ShipAlertEntity pAlert) {
+        pAlert.setShip(null);
+        this.alertList.remove(pAlert);
+    }
+
+    public void removeAllAlerts() {
+        if(alertList == null || alertList.isEmpty()) {
+            return;
+        }
+
+        for(ShipAlertEntity alert : new ArrayList<>(alertList)) {
+            this.removeAlert(alert);
+        }
+    }
 
 }

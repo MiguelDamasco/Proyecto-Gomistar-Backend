@@ -15,9 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
 import com.gomistar.proyecto_gomistar.DTO.response.ShipDocumentResponseDTO;
-import com.gomistar.proyecto_gomistar.model.ship.document.MandatoryInsuranceEntity;
 import com.gomistar.proyecto_gomistar.model.ship.document.MinimumSecurityEquipmentEntity;
-import com.gomistar.proyecto_gomistar.model.ship.document.RadioCommunicationsEntity;
 import com.gomistar.proyecto_gomistar.service.ship.document.DocumentShipService;
 import com.gomistar.proyecto_gomistar.service.ship.document.MinimumSecurityEquipmentService;
 
