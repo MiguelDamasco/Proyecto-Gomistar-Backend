@@ -40,7 +40,9 @@ public class DocumentShipService {
 
     private final ShipAlertService shipAlertService;
 
-    public DocumentShipService(BoatRegistrationService pBoatRegistrationService, ShipService pShipService, CertificateNavigabilityService pCertificateNavigabilityService, TechnicalInspectionService pTechnicalInspectionService, MandatoryInsuranceService pMandatoryInsuranceService, RadioCommunicationsService pRadioCommunicationsService, MinimumSecurityEquipmentService pMinimumSecurityEquipmentService, ShipAlertService pShipAlertService) {
+    private final AuxiliarClass auxiliarClass;
+
+    public DocumentShipService(BoatRegistrationService pBoatRegistrationService, ShipService pShipService, CertificateNavigabilityService pCertificateNavigabilityService, TechnicalInspectionService pTechnicalInspectionService, MandatoryInsuranceService pMandatoryInsuranceService, RadioCommunicationsService pRadioCommunicationsService, MinimumSecurityEquipmentService pMinimumSecurityEquipmentService, ShipAlertService pShipAlertService, AuxiliarClass pAuxiliarClass) {
         this.boatRegistrationService = pBoatRegistrationService;
         this.shipService = pShipService;
         this.certificateNavigabilityService = pCertificateNavigabilityService;
@@ -49,6 +51,7 @@ public class DocumentShipService {
         this.radioCommunicationsService = pRadioCommunicationsService;
         this.minimumSecurityEquipmentService = pMinimumSecurityEquipmentService;
         this.shipAlertService = pShipAlertService;
+        this.auxiliarClass = pAuxiliarClass;
     }
 
     public boolean existsBoatRegistration(AbstractShip pShip) {
@@ -238,18 +241,6 @@ public class DocumentShipService {
         }
     }
 
-    public String getDate(LocalDate pDate) {
-        
-        String[] myMonths = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre",
-                                "Octubre", "Noviembre", "Diciembre"};
-
-        int day = pDate.getDayOfMonth();
-        String month = myMonths[pDate.getMonthValue() - 1];
-        int year = pDate.getYear();
-        String result = day + " de " + month + " del año " + year;
-
-        return result;
-    }
 
     public ShipDocumentResponseDTO getBoatRegistration(String pIdShip) {
 
@@ -260,7 +251,7 @@ public class DocumentShipService {
             if(document instanceof BoatRegistrationEntity) {
 
                 BoatRegistrationEntity myBoatRegistration = (BoatRegistrationEntity) document;
-                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), getDate(myBoatRegistration.getExpirationDate()));
+                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), this.auxiliarClass.getDate(myBoatRegistration.getExpirationDate()));
                 return myDTO;
             }
         }
@@ -277,7 +268,7 @@ public class DocumentShipService {
             if(document instanceof CertificateNavigabilityEntity) {
 
                 CertificateNavigabilityEntity myBoatRegistration = (CertificateNavigabilityEntity) document;
-                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), getDate(myBoatRegistration.getExpirationDate()));
+                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), this.auxiliarClass.getDate(myBoatRegistration.getExpirationDate()));
                 return myDTO;
             }
         }
@@ -294,7 +285,7 @@ public class DocumentShipService {
             if(document instanceof TechnicalInspectionEntity) {
 
                 TechnicalInspectionEntity myBoatRegistration = (TechnicalInspectionEntity) document;
-                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), getDate(myBoatRegistration.getExpirationDate()));
+                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), this.auxiliarClass.getDate(myBoatRegistration.getExpirationDate()));
                 return myDTO;
             }
         }
@@ -311,7 +302,7 @@ public class DocumentShipService {
             if(document instanceof MandatoryInsuranceEntity) {
 
                 MandatoryInsuranceEntity myBoatRegistration = (MandatoryInsuranceEntity) document;
-                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), getDate(myBoatRegistration.getExpirationDate()));
+                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), this.auxiliarClass.getDate(myBoatRegistration.getExpirationDate()));
                 return myDTO;
             }
         }
@@ -328,7 +319,7 @@ public class DocumentShipService {
             if(document instanceof RadioCommunicationsEntity) {
 
                 RadioCommunicationsEntity myBoatRegistration = (RadioCommunicationsEntity) document;
-                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), getDate(myBoatRegistration.getExpirationDate()));
+                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), this.auxiliarClass.getDate(myBoatRegistration.getExpirationDate()));
                 return myDTO;
             }
         }
@@ -345,7 +336,7 @@ public class DocumentShipService {
             if(document instanceof MinimumSecurityEquipmentEntity) {
 
                 MinimumSecurityEquipmentEntity myBoatRegistration = (MinimumSecurityEquipmentEntity) document;
-                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), getDate(myBoatRegistration.getExpirationDate()));
+                ShipDocumentResponseDTO myDTO = new ShipDocumentResponseDTO(myBoatRegistration.getImage(), this.auxiliarClass.getDate(myBoatRegistration.getExpirationDate()));
                 return myDTO;
             }
         }

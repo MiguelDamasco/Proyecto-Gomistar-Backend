@@ -203,6 +203,12 @@ public class UserService {
             return myUser;
         }
 
+
+    public UserEntity save(UserEntity pUser) {
+
+        return this.userRepository.save(pUser);
+    } 
+
     @Transactional
     public void updateUserTokens(UserEntity user, List<ConfirmationTokenEntity> newTokens) {
        

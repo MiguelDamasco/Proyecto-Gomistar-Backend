@@ -1,9 +1,24 @@
 package com.gomistar.proyecto_gomistar.service.ship.document;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Component;
 
 @Component
 public class AuxiliarClass {
+
+    public String getDate(LocalDate pDate) {
+        
+        String[] myMonths = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre",
+                                "Octubre", "Noviembre", "Diciembre"};
+
+        int day = pDate.getDayOfMonth();
+        String month = myMonths[pDate.getMonthValue() - 1];
+        int year = pDate.getYear();
+        String result = day + " de " + month + " del año " + year;
+
+        return result;
+    }
     
     public String extractName(String s) {
 

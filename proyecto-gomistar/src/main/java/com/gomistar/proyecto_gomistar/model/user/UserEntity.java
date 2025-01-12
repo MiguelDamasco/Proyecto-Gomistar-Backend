@@ -55,6 +55,8 @@ public class UserEntity {
     @NotBlank
     private String password;
 
+    private int amountAlerts;
+
     @Column(name = "is_confirmed", columnDefinition = "TINYINT(1)")
     private boolean isConfirmed;
 
