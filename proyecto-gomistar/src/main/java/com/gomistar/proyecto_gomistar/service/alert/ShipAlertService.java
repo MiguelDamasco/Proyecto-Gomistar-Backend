@@ -80,6 +80,14 @@ public class ShipAlertService {
         return this.shipAlertRepository.save(myAlert);
     }
 
+    public ShipAlertEntity modifyShipAlert(String pIdAlert, LocalDate pDate) {
+
+        ShipAlertEntity myAlert = this.getAlert(pIdAlert);
+        myAlert.setDate(pDate);
+
+        return this.shipAlertRepository.save(myAlert);
+    }
+
     public void deleteShipAlertById(String pId) {
 
         ShipAlertEntity myAlert = this.getAlert(pId);

@@ -43,35 +43,29 @@ public class SchedulingService {
     }
 
 
-    
-
     private void checkShipAlerts() throws MessagingException {
 
-
-        // Fecha a comparar
-        LocalDate fechaActualEnZona = LocalDate.now(ZoneId.of("America/Montevideo"));
-
-        // Restar 10 días a la fecha base
+        LocalDate currentDateZone = LocalDate.now(ZoneId.of("America/Montevideo"));
         
         List<ShipAlertEntity> myShipAlerts = this.shipAlertService.listAll();
 
         for(ShipAlertEntity alert : myShipAlerts) {
 
-            LocalDate fechaBaseMenos10 = alert.getDate().minusDays(10);
+            LocalDate baseDateMinus10 = alert.getDate().minusDays(10);
 
-            LocalDate fechaBaseMenos1 = alert.getDate().minusDays(1);
+            LocalDate baseDateMinus1 = alert.getDate().minusDays(1);
 
-            if(fechaActualEnZona.isEqual(fechaBaseMenos10)) {
-                sendAlert10Days(this.getType(alert.getType()), alert.getShip().getName(), alert.getDate());
+            if(currentDateZone.isEqual(baseDateMinus10)) {
+                sendAlert10DaysShip(this.getTypeShip(alert.getType()), alert.getShip().getName(), alert.getDate());
             }
-            else if(fechaActualEnZona.isEqual(fechaBaseMenos1)) {
-                sendAlert1Day(this.getType(alert.getType()), alert.getShip().getName(), alert.getDate());
+            else if(currentDateZone.isEqual(baseDateMinus1)) {
+                sendAlert1DayShip(this.getTypeShip(alert.getType()), alert.getShip().getName(), alert.getDate());
             }
         }
 
     }
 
-    private String getType(Byte pType) {
+    private String getTypeShip(Byte pType) {
 
         if(pType == 1) {
             return "Registro de Embarcación";
@@ -95,7 +89,7 @@ public class SchedulingService {
         return null;
     }
 
-    private void sendAlert10Days(String pType, String pShipName, LocalDate pDate) throws MessagingException {
+    private void sendAlert10DaysShip(String pType, String pShipName, LocalDate pDate) throws MessagingException {
 
         String subject = "Vencimiento de documento en 10 días";
 
@@ -116,7 +110,7 @@ public class SchedulingService {
         }
     }
 
-    private void sendAlert1Day(String pType, String pShipName, LocalDate pDate) throws MessagingException {
+    private void sendAlert1DayShip(String pType, String pShipName, LocalDate pDate) throws MessagingException {
 
         String subject = "Vencimiento de documento mañana";
 
