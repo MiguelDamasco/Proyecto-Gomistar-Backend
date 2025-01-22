@@ -22,7 +22,7 @@ public class ShipAlertService {
         this.shipAlertRepository = pShipAlertRepository;
     }
 
-    public ShipAlertEntity getByType(AbstractShip pShip ,Byte pType) {
+    public ShipAlertEntity getByType(AbstractShip pShip, Byte pType) {
 
         for(ShipAlertEntity alert : new ArrayList<>(pShip.getAlertList())) {
 

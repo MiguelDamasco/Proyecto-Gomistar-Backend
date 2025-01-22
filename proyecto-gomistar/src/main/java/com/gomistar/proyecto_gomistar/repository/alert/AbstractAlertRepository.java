@@ -6,6 +6,4 @@ import org.springframework.data.repository.NoRepositoryBean;
 import com.gomistar.proyecto_gomistar.model.alert.AbstractAlert;
 
 @NoRepositoryBean
-public interface AbstractAlertRepository extends CrudRepository<AbstractAlert, Long> {
-    
-}
+public interface AbstractAlertRepository extends CrudRepository<AbstractAlert, Long> {}

@@ -45,6 +45,7 @@ public abstract class AbstractShip {
     private List<AbstractDocumentShip> documentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "ship", targetEntity = ShipAlertEntity.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<ShipAlertEntity> alertList = new ArrayList<>();
 
     public void addUser(UserEntity pUser) {

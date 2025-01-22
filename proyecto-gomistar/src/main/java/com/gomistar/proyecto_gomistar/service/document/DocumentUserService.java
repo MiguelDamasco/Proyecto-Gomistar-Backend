@@ -19,6 +19,8 @@ import com.gomistar.proyecto_gomistar.model.user.document.IdentityCardDocument;
 import com.gomistar.proyecto_gomistar.model.user.document.QualifyingTitleEntity;
 import com.gomistar.proyecto_gomistar.model.user.document.TetanusVaccineCertificateEntity;
 import com.gomistar.proyecto_gomistar.service.UserService;
+import com.gomistar.proyecto_gomistar.service.alert.AlertService;
+import com.gomistar.proyecto_gomistar.service.alert.UserAlertService;
 import com.gomistar.proyecto_gomistar.service.ship.document.AuxiliarClass;
 
 @Service
@@ -36,13 +38,16 @@ public class DocumentUserService {
 
     private final AuxiliarClass auxiliarClass;
 
-    public DocumentUserService(HealthCardService pHealthCardService, IdentityCardService pIdentityCardService, UserService pUserService, QualifyingTitleService pQualifyingService, TetanusVaccineCertificateService pTetanusVaccineCertificateService, AuxiliarClass pAuxiliarClass) {
+    private final AlertService alertService;
+
+    public DocumentUserService(HealthCardService pHealthCardService, IdentityCardService pIdentityCardService, UserService pUserService, QualifyingTitleService pQualifyingService, TetanusVaccineCertificateService pTetanusVaccineCertificateService, AuxiliarClass pAuxiliarClass, AlertService pAlertService) {
         this.identityCardService = pIdentityCardService;
         this.healthCardService = pHealthCardService;
         this.qualifyingTitleService = pQualifyingService;
         this.userService = pUserService;
         this.tetanusVaccineCertificateService = pTetanusVaccineCertificateService;
         this.auxiliarClass = pAuxiliarClass;
+        this.alertService = pAlertService;
     }
 
     public boolean existsHealthCard(UserEntity pUser) {
@@ -151,6 +156,7 @@ public class DocumentUserService {
                myUser.addDocument(myDocument);
                this.userService.save(myUser);
                //this.shipAlertService.createShipAlert(pExpirationDate, myShip, Byte.valueOf("1"));
+               this.alertService.createAlertUser(pExpirationDate, myUser, pDocumentNumber);
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");
@@ -163,6 +169,7 @@ public class DocumentUserService {
                myUser.addDocument(myDocument);
                this.userService.save(myUser);
                //this.shipAlertService.createShipAlert(pExpirationDate, myShip, Byte.valueOf("1"));
+               this.alertService.createAlertUser(pExpirationDate, myUser, pDocumentNumber);
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");
@@ -175,6 +182,7 @@ public class DocumentUserService {
                myUser.addDocument(myDocument);
                this.userService.save(myUser);
                //this.shipAlertService.createShipAlert(pExpirationDate, myShip, Byte.valueOf("1"));
+               this.alertService.createAlertUser(pExpirationDate, myUser, pDocumentNumber);
             }
             else {
                 throw new RequestException("P-202", "Ya existe el documento!");
@@ -191,6 +199,7 @@ public class DocumentUserService {
             IdentityCardDocument myDocument = this.identityCardService.createIdentityCard(pDTO);
             myUser.addDocument(myDocument);
             this.userService.save(myUser);
+            this.alertService.createAlertUser(pDTO.expirationData(), myUser, Byte.parseByte("4"));
         }
         else {
             throw new RequestException("P-202", "Ya existe el documento!");
@@ -341,6 +350,8 @@ public class DocumentUserService {
         IdentityCardDocument myDocument = this.identityCardService.deleteIdentityCard(myUser);
         
         //ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
+
+
 
         if(existsIdentityCard(myUser)) {
 

@@ -1,10 +1,12 @@
 package com.gomistar.proyecto_gomistar.model.user;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.gomistar.proyecto_gomistar.model.alert.DocumentAlertEntity;
 import com.gomistar.proyecto_gomistar.model.email.ConfirmationTokenEntity;
 import com.gomistar.proyecto_gomistar.model.role.RoleEntity;
 import com.gomistar.proyecto_gomistar.model.ship.AbstractShip;
@@ -80,7 +82,11 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user", targetEntity = AbstractDocument.class, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<AbstractDocument> documents; 
+    private List<AbstractDocument> documents;
+
+    @OneToMany(mappedBy = "user", targetEntity = DocumentAlertEntity.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<DocumentAlertEntity> alertList;
 
     public void addToken(ConfirmationTokenEntity pToken) {
         this.tokens.add(pToken);
@@ -98,6 +104,16 @@ public class UserEntity {
     public void removeDocument(AbstractDocument pDocument) {
         pDocument.setUser(null);
         this.documents.remove(pDocument);
+    }
+
+    public void addAlert(DocumentAlertEntity pAlert) {
+        pAlert.setUser(this);
+        this.alertList.add(pAlert);
+    }
+
+    public void removeAlert(DocumentAlertEntity pAlert) {
+        pAlert.setUser(null);
+        this.alertList.remove(pAlert);
     }
 
 }
