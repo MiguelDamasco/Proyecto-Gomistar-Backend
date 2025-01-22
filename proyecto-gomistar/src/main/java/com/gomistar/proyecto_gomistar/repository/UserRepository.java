@@ -21,6 +21,9 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     boolean existsByUsername(String username);
 
+    @Query("SELECT u.amountAlerts FROM UserEntity u WHERE u.id = :id")
+    Optional<Integer> getAmountAlerts(@Param("id") Long id);
+
     Optional<UserEntity> findByEmail(String email);
 
     @Query(value = """

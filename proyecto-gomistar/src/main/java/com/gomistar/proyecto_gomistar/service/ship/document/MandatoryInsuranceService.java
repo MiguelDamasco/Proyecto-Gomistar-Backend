@@ -11,7 +11,6 @@ import com.gomistar.proyecto_gomistar.DTO.response.S3ResponseDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
 import com.gomistar.proyecto_gomistar.model.ship.AbstractShip;
 import com.gomistar.proyecto_gomistar.model.ship.document.AbstractDocumentShip;
-import com.gomistar.proyecto_gomistar.model.ship.document.CertificateNavigabilityEntity;
 import com.gomistar.proyecto_gomistar.model.ship.document.MandatoryInsuranceEntity;
 import com.gomistar.proyecto_gomistar.repository.ship.document.MandatoryInsuranceRepository;
 import com.gomistar.proyecto_gomistar.service.s3.S3Service;

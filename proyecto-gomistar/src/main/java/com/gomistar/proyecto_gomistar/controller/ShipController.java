@@ -48,6 +48,8 @@ public class ShipController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    
+
     @GetMapping("/amount_documents")
     public ResponseEntity<?> getAmountDocuments(@RequestParam String pId) {
 

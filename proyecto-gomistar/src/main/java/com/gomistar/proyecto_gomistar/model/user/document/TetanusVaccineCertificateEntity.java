@@ -17,26 +17,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "identity_card")
-public class IdentityCardDocument extends AbstractDocument {
+@Table(name = "tetanus_vaccine_certificate")
+public class TetanusVaccineCertificateEntity extends AbstractDocument {
     
     private String image;
-    
-    private String name;
-
-    private String lastname;
-
-    private String nationality;
-
-    @Column(name = "identity_number")
-    private String identityNumber;
-    
-    private LocalDate birthday;
-
-    @Column(name = "expedition_date")
-    private LocalDate expeditionDate;
 
     @Column(name = "expiration_date")
-    private LocalDate expirationData;
-
+    private LocalDate expirationDate;
 }

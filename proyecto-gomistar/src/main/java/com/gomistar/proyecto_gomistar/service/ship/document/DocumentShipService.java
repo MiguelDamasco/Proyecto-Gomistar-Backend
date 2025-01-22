@@ -363,8 +363,6 @@ public class DocumentShipService {
 
     public void deleteCertificateNavigability(String pIdShip, String pType) throws IOException {
 
-        System.out.println("pIdShip: [" + pIdShip + " ]" );
-        System.out.println("pType: [" + pType + " ]" );
         AbstractShip myShip = this.shipService.getShip(pIdShip);
 
         CertificateNavigabilityEntity myDocument = this.certificateNavigabilityService.deleteBoatRegistration(myShip);
@@ -489,4 +487,5 @@ public class DocumentShipService {
 
         return this.minimumSecurityEquipmentService.getDownload(myShip);
     }
+
 }

@@ -18,6 +18,7 @@ import com.gomistar.proyecto_gomistar.model.ship.LoadTypeEntity;
 import com.gomistar.proyecto_gomistar.model.ship.PassengerShipEntity;
 import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 import com.gomistar.proyecto_gomistar.service.UserService;
+
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -52,6 +53,21 @@ public class ShipService {
         else if(pShip instanceof PassengerShipEntity) {
             this.passengerShipService.save((PassengerShipEntity) pShip);
         }
+    }
+
+    public List<UserEntity> getUsersByShip(String pShip) {
+
+        List<UserEntity> myUsers = this.userService.getAllUser();
+        List<UserEntity> resuList = new ArrayList<>();
+
+        for(UserEntity user : myUsers) {
+
+            if(user.getShip() != null && user.getShip().getId() == Long.parseLong(pShip)) {
+                resuList.add(user);
+            }
+        }
+
+        return resuList;
     }
 
     //Hay que optimizarlo!!
@@ -175,7 +191,7 @@ public class ShipService {
         PassengerShipEntity myShip = PassengerShipEntity.builder().build();
         myShip.setId(Long.parseLong(pDTO.id()));
         myShip.setName(pDTO.name());
-        System.out.println("Lista de usuarios a transformar: " + userList);
+
         for(UserEntity user : userList) {
             myShip.addUser(user);
         }
@@ -190,7 +206,7 @@ public class ShipService {
         myShip.setId(Long.parseLong(pDTO.id()));
         myShip.setName(pDTO.name());
         myShip.setLoadType(myLoad);
-        System.out.println("Lista de usuarios a transformar: " + userList);
+
         for(UserEntity user : userList) {
             myShip.addUser(user);
         }

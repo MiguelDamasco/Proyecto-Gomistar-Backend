@@ -22,6 +22,7 @@ import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserUsernameDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
 import com.gomistar.proyecto_gomistar.model.email.ConfirmationTokenEntity;
 import com.gomistar.proyecto_gomistar.model.role.RoleEntity;
+import com.gomistar.proyecto_gomistar.model.ship.AbstractShip;
 import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 import com.gomistar.proyecto_gomistar.repository.UserRepository;
 import com.gomistar.proyecto_gomistar.service.email.ConfirmationTokenService;
@@ -58,6 +59,17 @@ public class UserService {
         return new getIdUserDTO(String.valueOf(myUserOptional.get().getId()));
     }
 
+    public Integer getAmountAlerts(String pId) {
+
+        Optional<Integer> myAmountAlerts = this.userRepository.getAmountAlerts(Long.parseLong(pId));
+
+        if(!myAmountAlerts.isPresent()) {
+            throw new RequestException("p-234", "Error al obtener cantidad de alertas");
+        }
+
+        return myAmountAlerts.get();
+    }
+
     public Long findIdByUsername(String pUsername) {
 
         Optional<UserEntity> myUserOptional = this.userRepository.findByUsername(pUsername);
@@ -76,7 +88,7 @@ public class UserService {
 
         for(UserEntity user : listUsers) {
 
-            if(user.getShip() == null && user.getEmployee() != null) {
+            if(user.getShip() == null) {
 
                 listResult.add(user);
             }

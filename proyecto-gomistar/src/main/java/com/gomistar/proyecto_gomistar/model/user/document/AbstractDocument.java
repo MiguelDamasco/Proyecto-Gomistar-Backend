@@ -2,6 +2,7 @@ package com.gomistar.proyecto_gomistar.model.user.document;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.gomistar.proyecto_gomistar.model.user.EmployeeEntity;
+import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -30,14 +31,8 @@ public class AbstractDocument implements IDocument {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-
-    public AbstractDocument(String pName) {
-        this.name = pName;
-    }
-
-    @ManyToOne(targetEntity = EmployeeEntity.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "employee_id")
+    @ManyToOne(targetEntity = UserEntity.class)
+    @JoinColumn(name = "user_id")
     @JsonBackReference
-    private EmployeeEntity employee; 
+    private UserEntity user;
 }

@@ -40,18 +40,5 @@ public class EmployeeEntity {
     @Column(name = "is_active", columnDefinition = "TINYINT(1)")
     private boolean isActive;
 
-    @OneToMany(mappedBy = "employee", targetEntity = AbstractDocument.class, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<AbstractDocument> documents; 
 
-
-    public void addDocument(AbstractDocument pDocument) {
-        pDocument.setEmployee(this);
-        this.documents.add(pDocument);
-    }
-
-    public void removeDocument(AbstractDocument pDocument) {
-        pDocument.setEmployee(null);
-        this.documents.remove(pDocument);
-    }
 }

@@ -6,6 +6,4 @@ import org.springframework.data.repository.NoRepositoryBean;
 import com.gomistar.proyecto_gomistar.model.user.document.AbstractDocument;
 
 @NoRepositoryBean
-public interface AbstractDocumentRepository extends CrudRepository<AbstractDocument, Long> {
-    
-}
+public interface AbstractDocumentRepository extends CrudRepository<AbstractDocument, Long> {}

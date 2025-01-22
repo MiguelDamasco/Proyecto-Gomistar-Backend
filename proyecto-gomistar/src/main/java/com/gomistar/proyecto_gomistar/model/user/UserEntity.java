@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.gomistar.proyecto_gomistar.model.email.ConfirmationTokenEntity;
 import com.gomistar.proyecto_gomistar.model.role.RoleEntity;
 import com.gomistar.proyecto_gomistar.model.ship.AbstractShip;
+import com.gomistar.proyecto_gomistar.model.user.document.AbstractDocument;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -77,12 +78,26 @@ public class UserEntity {
     @JsonBackReference
     private AbstractShip ship;
 
+    @OneToMany(mappedBy = "user", targetEntity = AbstractDocument.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<AbstractDocument> documents; 
+
     public void addToken(ConfirmationTokenEntity pToken) {
         this.tokens.add(pToken);
     }
 
     public List<ConfirmationTokenEntity> getTokens() {
         return this.tokens;
+    }
+
+    public void addDocument(AbstractDocument pDocument) {
+        pDocument.setUser(this);
+        this.documents.add(pDocument);
+    }
+
+    public void removeDocument(AbstractDocument pDocument) {
+        pDocument.setUser(null);
+        this.documents.remove(pDocument);
     }
 
 }
