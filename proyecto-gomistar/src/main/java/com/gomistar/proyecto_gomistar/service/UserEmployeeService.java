@@ -82,14 +82,6 @@ public class UserEmployeeService {
         }
         return listRole;
     }
-
-    public UserEntity createUserEmployee(UserEmployeeDTO pUser) {
-
-        Set<RoleEntity> listRole = this.obtainRoles(pUser.roles());
-        UserEntity myUser = this.userService.save(new UserDTO(pUser.username(), pUser.password(), pUser.email()), listRole);
-        UserEntity result = this.addEmployee(new AddEmployeeToUserDTO(String.valueOf(myUser.getId()), pUser.name(), pUser.lastname()));
-        return result;
-    }
     
 
     public UserEntity addEmployee(AddEmployeeToUserDTO pDTO) {

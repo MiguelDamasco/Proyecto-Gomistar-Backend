@@ -1,13 +1,11 @@
 package com.gomistar.proyecto_gomistar.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,11 +16,12 @@ import com.gomistar.proyecto_gomistar.DTO.request.UserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTOModify;
 import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserPasswordDTO;
-import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserUsernameDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.CreateUserDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ViewUserDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
 import com.gomistar.proyecto_gomistar.model.email.ConfirmationTokenEntity;
+import com.gomistar.proyecto_gomistar.model.role.ERole;
 import com.gomistar.proyecto_gomistar.model.role.RoleEntity;
-import com.gomistar.proyecto_gomistar.model.ship.AbstractShip;
 import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 import com.gomistar.proyecto_gomistar.repository.UserRepository;
 import com.gomistar.proyecto_gomistar.service.email.ConfirmationTokenService;
@@ -41,11 +40,33 @@ public class UserService {
 
     private final EmailService emailService;
 
-    public UserService(UserRepository pUserRepository, PasswordEncoder pPasswordEncoder, ConfirmationTokenService pConfirmationTokenService, EmailService pEmailService) {
+    private final RoleService roleService;
+
+    public UserService(UserRepository pUserRepository, PasswordEncoder pPasswordEncoder, ConfirmationTokenService pConfirmationTokenService, EmailService pEmailService, RoleService pRoleService) {
         this.userRepository = pUserRepository;
         this.passwordEncoder = pPasswordEncoder;
         this.confirmationTokenService = pConfirmationTokenService;
         this.emailService = pEmailService;
+        this.roleService = pRoleService;
+    }
+
+    public Set<RoleEntity> obtainRoles(List<String> pRole) {
+
+        Set<RoleEntity> listRole = new HashSet<>();
+        for(String s : pRole) {
+            ERole myRole = this.roleService.obtainRole(s);
+            RoleEntity myRoleEntity = this.roleService.findByName(myRole);
+            listRole.add(myRoleEntity);
+        }
+        return listRole;
+    }
+
+    public UserEntity createUser(CreateUserDTO pDTO) {
+
+        Set<RoleEntity> listRole = this.obtainRoles(pDTO.roles());
+
+        UserEntity myUser = this.save(new UserDTO(pDTO.username(), pDTO.password() , pDTO.email(), pDTO.name(), pDTO.lastname()), listRole);
+        return myUser;
     }
 
     public getIdUserDTO getId(String pUsername) {
@@ -116,9 +137,9 @@ public class UserService {
         return true;
     }
 
-    public boolean checkUsername(CheckUserUsernameDTO pDTO) {
+    public boolean checkUsername(String pUsername) {
 
-        boolean result = this.existUsername(pDTO.username());
+        boolean result = this.existUsername(pUsername);
 
         if(result) {
             throw new RequestException("P-293", "Ya existe el username, ingrese uno que no exista.");
@@ -127,8 +148,39 @@ public class UserService {
         return true;
     }
 
+    public boolean checkEmail(String pEmail) {
+
+        boolean result = this.existEmail(pEmail);
+
+        if(result) {
+            throw new RequestException("P-222", "el email ya existe!");
+        }
+
+        return true;
+
+    }
+
     public List<UserEntity> getAllUser() {
         return (List<UserEntity>) this.userRepository.findAll();
+    }
+
+    public List<ViewUserDTO> listAllUser() {
+
+        List<UserEntity> myList = this.getAllUser();
+        List<ViewUserDTO> listResult = new ArrayList<>();
+
+        for(UserEntity user : myList) {
+
+            String myRole = user.getRoles().stream()
+            .anyMatch(roleEntity -> roleEntity.getName().equals(ERole.ADMIN))
+            ? "Administrador"
+            : "Usuario";
+
+            ViewUserDTO myDTO = new ViewUserDTO(String.valueOf(user.getId()), user.getUsername(), user.getEmail(), user.getName() + " " + user.getLastname(), myRole);
+            listResult.add(myDTO);
+        }
+
+        return listResult;
     }
 
     public UserEntity getUser(String pId) {
@@ -175,9 +227,9 @@ public class UserService {
 
     public UserEntity save(UserDTO pUser, Set<RoleEntity> roleList) {
 
-        if(existEmail(pUser.email())) {
-            throw new RequestException("p-222", "el email ya existe!");
-        }
+        if(checkEmail(pUser.email()) && checkUsername(pUser.username())) {
+            
+        
 
         String password = this.passwordEncoder.encode(pUser.password());
 
@@ -190,10 +242,11 @@ public class UserService {
                                                 .build();
                                        
 
-        this.userRepository.save(myUser);
+        return this.userRepository.save(myUser);
 
-        return myUser;
+        }
 
+        return null;
     }
         public UserEntity save(UserDTO pUser) {
 

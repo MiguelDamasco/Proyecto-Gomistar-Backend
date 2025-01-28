@@ -11,20 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gomistar.proyecto_gomistar.DTO.request.alert.ModifyAlertDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
+import com.gomistar.proyecto_gomistar.model.alert.AbstractAlert;
 import com.gomistar.proyecto_gomistar.model.alert.ShipAlertEntity;
 import com.gomistar.proyecto_gomistar.service.alert.AlertService;
-import com.gomistar.proyecto_gomistar.service.alert.ShipAlertService;
 
 @RestController
-@RequestMapping("/ship_alert")
-public class ShipAlertController {
+@RequestMapping("/alert")
+public class AlertController {
     
-    private final ShipAlertService shipAlertService;
-
     private final AlertService alertService;
 
-    public ShipAlertController(ShipAlertService pShipAlertService, AlertService pAlertService) {
-        this.shipAlertService = pShipAlertService;
+    public AlertController(AlertService pAlertService) {
         this.alertService = pAlertService;
     }
 
@@ -40,12 +37,13 @@ public class ShipAlertController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteShipAlert(@RequestParam String pId) {
+    public ResponseEntity<?> deleteAlert(@RequestParam String pIdAlert) {
 
-        this.shipAlertService.deleteShipAlertById(pId);
-        ApiResponse<ShipAlertEntity> response = new ApiResponse<>(
-        "Alerta eliminada!",
-        null);
+        this.alertService.deleteAlert(pIdAlert);
+        ApiResponse<AbstractAlert> response = new ApiResponse<>(
+        "Alerta eliminada!", 
+        null
+        );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

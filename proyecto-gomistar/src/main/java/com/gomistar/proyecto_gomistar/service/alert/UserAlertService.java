@@ -49,6 +49,17 @@ public class UserAlertService {
         return resultList;
     }
 
+    public AbstractAlert getAbstractAlert(String pId) {
+
+        Optional<AbstractAlert> myAlertOptional = this.userAlertRepository.findById(Long.parseLong(pId));
+
+        if(!myAlertOptional.isPresent()) {
+            throw new RequestException("p-209", "No existe la alerta buscada");
+        }
+
+        return myAlertOptional.get();
+    }
+
     public DocumentAlertEntity getAlert(String pId) {
 
         Optional<AbstractAlert> myAlertOptional = this.userAlertRepository.findById(Long.parseLong(pId));
@@ -70,12 +81,11 @@ public class UserAlertService {
         return this.userAlertRepository.save(myAlert);
     }
 
-    public DocumentAlertEntity modifyAlert(String pIdAlert, LocalDate pDate) {
+    public DocumentAlertEntity modifyAlert(DocumentAlertEntity pAlert, LocalDate pDate) {
 
-        DocumentAlertEntity myAlert = this.getAlert(pIdAlert);
-        myAlert.setDate(pDate);
+        pAlert.setDate(pDate);
 
-        return this.userAlertRepository.save(myAlert);
+        return this.userAlertRepository.save(pAlert);
     }
 
     public void deleteAlertById(String pIdAlert) {

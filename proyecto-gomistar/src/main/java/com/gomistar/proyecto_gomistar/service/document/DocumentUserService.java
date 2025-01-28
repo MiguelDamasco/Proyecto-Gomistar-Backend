@@ -12,6 +12,7 @@ import com.gomistar.proyecto_gomistar.DTO.response.user.DocumentResponseDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.user.IdentityCardLectureDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.user.ViewIdentityCardDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
+import com.gomistar.proyecto_gomistar.model.alert.DocumentAlertEntity;
 import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 import com.gomistar.proyecto_gomistar.model.user.document.AbstractDocument;
 import com.gomistar.proyecto_gomistar.model.user.document.HealthCardEntity;
@@ -299,12 +300,12 @@ public class DocumentUserService {
 
         HealthCardEntity myDocument = this.healthCardService.deleteBoatRegistration(myUser);
         
-        //ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
+        DocumentAlertEntity myAlert = this.alertService.getByTypeUser(myUser, Byte.parseByte(pType));
 
         if(existsHealthCard(myUser)) {
 
             myUser.removeDocument(myDocument);
-            //myShip.removeAlert(myAlert);
+            myUser.removeAlert(myAlert);
             this.userService.save(myUser);
         }
     }
@@ -315,12 +316,12 @@ public class DocumentUserService {
 
         QualifyingTitleEntity myDocument = this.qualifyingTitleService.deleteBoatRegistration(myUser);
         
-        //ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
+        DocumentAlertEntity myAlert = this.alertService.getByTypeUser(myUser, Byte.parseByte(pType));
 
         if(existsQualifyingTtile(myUser)) {
 
             myUser.removeDocument(myDocument);
-            //myShip.removeAlert(myAlert);
+            myUser.removeAlert(myAlert);
             this.userService.save(myUser);
         }
 
@@ -332,12 +333,12 @@ public class DocumentUserService {
 
         TetanusVaccineCertificateEntity myDocument = this.tetanusVaccineCertificateService.deleteBoatRegistration(myUser);
         
-        //ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
+        DocumentAlertEntity myAlert = this.alertService.getByTypeUser(myUser, Byte.parseByte(pType));
 
         if(existsTetanusVaccineCertificate(myUser)) {
 
             myUser.removeDocument(myDocument);
-            //myShip.removeAlert(myAlert);
+            myUser.removeAlert(myAlert);
             this.userService.save(myUser);
         }
 
@@ -349,14 +350,12 @@ public class DocumentUserService {
 
         IdentityCardDocument myDocument = this.identityCardService.deleteIdentityCard(myUser);
         
-        //ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
-
-
+        DocumentAlertEntity myAlert = this.alertService.getByTypeUser(myUser, Byte.parseByte(pType));
 
         if(existsIdentityCard(myUser)) {
 
             myUser.removeDocument(myDocument);
-            //myShip.removeAlert(myAlert);
+            myUser.removeAlert(myAlert);
             this.userService.save(myUser);
         }
     }

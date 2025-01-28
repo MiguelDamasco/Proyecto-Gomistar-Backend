@@ -355,7 +355,9 @@ public class DocumentShipService {
         if(existsBoatRegistration(myShip)) {
 
             myShip.removeDocument(myDocument);
-            myShip.removeAlert(myAlert);
+            if(myAlert != null) {
+                myShip.removeAlert(myAlert);
+            }
             this.shipService.saveShip(myShip);
         }
 
@@ -372,7 +374,9 @@ public class DocumentShipService {
         if(existsCertificateNavigability(myShip)) {
 
             myShip.removeDocument(myDocument);
-            myShip.removeAlert(myAlert);
+            if(myAlert != null) {
+                myShip.removeAlert(myAlert);
+            }
             this.shipService.saveShip(myShip);
         }
 
@@ -386,10 +390,12 @@ public class DocumentShipService {
 
         ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
 
-        if(existsCertificateNavigability(myShip)) {
+        if(existsTechnicalInspection(myShip)) {
 
             myShip.removeDocument(myDocument);
-            myShip.removeAlert(myAlert);
+            if(myAlert != null) {
+                myShip.removeAlert(myAlert);
+            }
             this.shipService.saveShip(myShip);
         }
 
@@ -403,10 +409,12 @@ public class DocumentShipService {
 
         ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
 
-        if(existsCertificateNavigability(myShip)) {
+        if(existsMandatoryInsurance(myShip)) {
 
             myShip.removeDocument(myDocument);
-            myShip.removeAlert(myAlert);
+            if(myAlert != null) {
+                myShip.removeAlert(myAlert);
+            }
             this.shipService.saveShip(myShip);
         }
 
@@ -420,10 +428,12 @@ public class DocumentShipService {
         
         ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
 
-        if(existsCertificateNavigability(myShip)) {
+        if(existsRadioCommunications(myShip)) {
 
             myShip.removeDocument(myDocument);
-            myShip.removeAlert(myAlert);
+            if(myAlert != null) {
+                myShip.removeAlert(myAlert);
+            }
             this.shipService.saveShip(myShip);
         }
 
@@ -437,10 +447,12 @@ public class DocumentShipService {
         
         ShipAlertEntity myAlert = this.shipAlertService.getByType(myShip, Byte.parseByte(pType));
 
-        if(existsCertificateNavigability(myShip)) {
+        if(existsMinimumSecurityEquipment(myShip)) {
 
             myShip.removeDocument(myDocument);
-            myShip.removeAlert(myAlert);
+            if(myAlert != null) {
+                myShip.removeAlert(myAlert);
+            }
             this.shipService.saveShip(myShip);
         }
 

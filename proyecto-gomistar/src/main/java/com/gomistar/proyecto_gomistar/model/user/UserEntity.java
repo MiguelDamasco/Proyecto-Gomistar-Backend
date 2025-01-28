@@ -58,6 +58,14 @@ public class UserEntity {
     @NotBlank
     private String password;
 
+    @NotBlank
+    @Size(max = 30)
+    private String name;
+
+    @NotBlank
+    @Size(max = 30)
+    private String lastname;
+
     private int amountAlerts;
 
     @Column(name = "is_confirmed", columnDefinition = "TINYINT(1)")
@@ -67,9 +75,6 @@ public class UserEntity {
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), 
     inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roles;
-
-    @OneToOne(targetEntity = EmployeeEntity.class, cascade = CascadeType.ALL)
-    private EmployeeEntity employee;
 
     @OneToMany(mappedBy = "users", targetEntity = ConfirmationTokenEntity.class, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

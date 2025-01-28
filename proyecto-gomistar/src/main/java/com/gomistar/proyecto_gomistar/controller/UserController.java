@@ -9,7 +9,6 @@ import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,19 +17,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.gomistar.proyecto_gomistar.DTO.request.AddEmployeeToUserDTO;
-import com.gomistar.proyecto_gomistar.DTO.request.UserDTO;
+
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTOModify;
 import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserPasswordDTO;
-import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserUsernameDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.CreateUserDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ViewUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
+import com.gomistar.proyecto_gomistar.DTO.response.ViewAlertDTO;
 import com.gomistar.proyecto_gomistar.model.role.RoleEntity;
-import com.gomistar.proyecto_gomistar.model.ship.document.BoatRegistrationEntity;
 import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 import com.gomistar.proyecto_gomistar.model.user.document.AbstractDocument;
-import com.gomistar.proyecto_gomistar.service.UserEmployeeService;
 import com.gomistar.proyecto_gomistar.service.UserService;
+import com.gomistar.proyecto_gomistar.service.alert.AlertService;
 import com.gomistar.proyecto_gomistar.service.document.DocumentUserService;
 import com.gomistar.proyecto_gomistar.service.ship.ShipService;
 
@@ -40,18 +39,42 @@ public class UserController {
     
     private final UserService userService;
 
-    private final UserEmployeeService userEmployeeService;
-
     private final ShipService shipService;
 
     private final DocumentUserService documentUserService;
 
-    public UserController(UserService pUserService, UserEmployeeService pUserEmployeeService, ShipService pShipService, DocumentUserService pDocumentUserService) {
+    private final AlertService alertService;
+
+    public UserController(UserService pUserService, ShipService pShipService, DocumentUserService pDocumentUserService,AlertService pAlertService) {
         this.userService = pUserService;
-        this.userEmployeeService = pUserEmployeeService;
         this.shipService = pShipService;
         this.documentUserService = pDocumentUserService;
+        this.alertService = pAlertService;
     }
+
+    @GetMapping("/check_username")
+    public ResponseEntity<?> checkUsername(@RequestParam String pUsername) {
+
+        Boolean result = this.userService.checkUsername(pUsername);
+        ApiResponse<Boolean> response = new ApiResponse<>(
+        "Exito!",
+        result
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    
+    @GetMapping("/check_email")
+    public ResponseEntity<?> checkEmail(@RequestParam String pEmail) {
+
+        Boolean result = this.userService.checkEmail(pEmail);
+        ApiResponse<Boolean> response = new ApiResponse<>(
+        "Exito!",
+        result
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    } 
 
     @GetMapping("/findAll")
     public ResponseEntity<?> getAllUsers() {
@@ -113,6 +136,18 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @GetMapping("/list_users")
+    public ResponseEntity<?> getUsers() {
+
+        List<ViewUserDTO> myList = this.userService.listAllUser();
+        ApiResponse<List<ViewUserDTO>> response = new ApiResponse<>(
+        "Lista encontrada!",
+        myList
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @GetMapping("/amount_documents")
     public ResponseEntity<?> getAmountDocuments(@RequestParam String pId) {
 
@@ -124,13 +159,25 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping("/amount_alerts")
+    @GetMapping("/amount_alerts")
     public ResponseEntity<?> getAmountAlerts(@RequestParam String pId) {
 
         Integer myAmountAlerts = this.userService.getAmountAlerts(pId);
         ApiResponse<Integer> response = new ApiResponse<>(
         "Cantidad de alertas", 
         myAmountAlerts
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/alerts_admin")
+    public ResponseEntity<?> getAlerts(@RequestParam String pIdUser) {
+
+        List<ViewAlertDTO> myList = this.alertService.getAlertsAdmin(pIdUser);
+        ApiResponse<List<ViewAlertDTO>> response = new ApiResponse<>(
+        "Lista de alertas",
+        myList
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -148,29 +195,17 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/checkUsername")
-    public ResponseEntity<?> checkUserUsername(@RequestBody CheckUserUsernameDTO pDTO) {
+   // @PostMapping("/checkUsername")
+   // public ResponseEntity<?> checkUserUsername(@RequestBody CheckUserUsernameDTO pDTO) {
         
-        boolean myUsernameExist = this.userService.checkUsername(pDTO);
-        ApiResponse<Boolean> response = new ApiResponse<>(
-            "Username disponible!",
-            myUsernameExist
-        );
+       // boolean myUsernameExist = this.userService.checkUsername(pDTO);
+       // ApiResponse<Boolean> response = new ApiResponse<>(
+       //     "Username disponible!",
+        //    myUsernameExist
+        //);
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<?> saveUser(@RequestBody UserDTO pUser) {
-
-        UserEntity myUser = this.userService.save(pUser);
-        ApiResponse<UserEntity> response = new ApiResponse<>(
-            "Usuario creado correctamente!",
-            myUser
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+       // return ResponseEntity.status(HttpStatus.OK).body(response);
+    //}
 
     @PostMapping("/add_document")
     public ResponseEntity<?> addDocument(@RequestParam String pIdUser, @RequestParam MultipartFile pFile, @RequestParam LocalDate pDate, @RequestParam String pNumber) throws NumberFormatException, IOException {
@@ -195,17 +230,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PatchMapping("/addEmployee")
-    public ResponseEntity<?> addEmployee(@RequestBody AddEmployeeToUserDTO myDTO) {
-        
-        UserEntity myUser = this.userEmployeeService.addEmployee(myDTO);
-        ApiResponse<UserEntity> response = new ApiResponse<>(
-            "Empleado añadido correctamente",
-            myUser
-        );
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
 
     @GetMapping("/getRoles")
     public ResponseEntity<?> getRoles(@RequestParam String pIdUser) {
@@ -217,6 +241,18 @@ public class UserController {
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> createUser(@RequestBody CreateUserDTO pDTO) {
+
+        UserEntity myUser = this.userService.createUser(pDTO);
+        ApiResponse<UserEntity> response = new ApiResponse<>(
+        "Usuario creado!",
+        myUser
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
 }

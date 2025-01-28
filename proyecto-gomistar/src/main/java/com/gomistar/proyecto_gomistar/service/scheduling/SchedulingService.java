@@ -61,7 +61,7 @@ public class SchedulingService {
 
         for(DocumentAlertEntity alert : myUserAlerts) {
 
-            LocalDate baseDateMinus10 = alert.getDate().minusDays(11);
+            LocalDate baseDateMinus10 = alert.getDate().minusDays(10);
 
             LocalDate baseDateMinus1 = alert.getDate().minusDays(1);
 
@@ -147,7 +147,8 @@ public class SchedulingService {
         String message = "Su documento " + pType + " vencerá dentro de 10 días, en la fecha " + this.auxiliarClass.getDate(pDate);
 
         EmailDTO myDTO = new EmailDTO(pUser.getEmail(), subject, message);
-        pUser.setAmountAlerts(pUser.getAmountAlerts() + 1);
+        int myAmountAlerts = pUser.getAmountAlerts() + 1;
+        pUser.setAmountAlerts(myAmountAlerts);
         this.userService.save(pUser);
         this.emailService.sendMail(myDTO);
 
@@ -161,7 +162,8 @@ public class SchedulingService {
         String message = "Su documento " + pType + " vencerá mañana " + this.auxiliarClass.getDate(pDate);
 
         EmailDTO myDTO = new EmailDTO(pUser.getEmail(), subject, message);
-        pUser.setAmountAlerts(pUser.getAmountAlerts() + 1);
+        int myAmountAlerts = pUser.getAmountAlerts() + 1;
+        pUser.setAmountAlerts(myAmountAlerts);
         this.userService.save(pUser);
         this.emailService.sendMail(myDTO);
 
@@ -183,7 +185,8 @@ public class SchedulingService {
 
         for(UserEntity user : myAdminUsers) {
             EmailDTO myDTO = new EmailDTO(user.getEmail(), subject, message);
-            user.setAmountAlerts(user.getAmountAlerts() + 1);
+            int myAmountAlerts = user.getAmountAlerts() + 1;
+            user.setAmountAlerts(myAmountAlerts);
             this.userService.save(user);
             this.emailService.sendMail(myDTO);
         }
@@ -204,7 +207,8 @@ public class SchedulingService {
 
         for(UserEntity user : myAdminUsers) {
             EmailDTO myDTO = new EmailDTO(user.getEmail(), subject, message);
-            user.setAmountAlerts(user.getAmountAlerts() + 1);
+            int myAmountAlerts = user.getAmountAlerts() + 1;
+            user.setAmountAlerts(myAmountAlerts);
             this.userService.save(user);
             this.emailService.sendMail(myDTO);
         }
