@@ -1,5 +1,6 @@
 package com.gomistar.proyecto_gomistar.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -20,6 +21,10 @@ public class RoleService {
 
     public RoleEntity findByName(ERole pRole) {
         return this.roleRepository.findByName(pRole);
+    }
+
+    public List<RoleEntity> listAll() {
+        return (List<RoleEntity>) this.roleRepository.findAll();
     }
 
     public RoleEntity save(String pName) {

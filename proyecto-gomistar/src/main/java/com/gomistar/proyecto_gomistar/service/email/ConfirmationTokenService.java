@@ -23,7 +23,9 @@ public class ConfirmationTokenService {
 
     public ConfirmationTokenEntity createConfirmationToken(UserEntity pUser) {
         
-        String token = UUID.randomUUID().toString();
+        int randomNumber = 100000 + (int)(Math.random() * 900000);
+
+        String token = String.valueOf(randomNumber);
 
         ConfirmationTokenEntity myToken = ConfirmationTokenEntity.builder()
                                                                     .token(token)

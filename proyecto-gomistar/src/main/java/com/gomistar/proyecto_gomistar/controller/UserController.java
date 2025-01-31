@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,11 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import com.gomistar.proyecto_gomistar.DTO.request.ConfirmEmailDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTOModify;
 import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserPasswordDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CreateUserDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.ViewUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.response.ApiResponse;
 import com.gomistar.proyecto_gomistar.DTO.response.ViewAlertDTO;
@@ -159,6 +161,18 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @GetMapping("/is_comfirmed")
+    public ResponseEntity<?> getIsConfirmed(@RequestParam String pIdUser) {
+
+        Boolean result = this.userService.isConfirmed(pIdUser);
+        ApiResponse<Boolean> response = new ApiResponse<>(
+        "Encontrado!", 
+        result
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @GetMapping("/amount_alerts")
     public ResponseEntity<?> getAmountAlerts(@RequestParam String pId) {
 
@@ -218,8 +232,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PostMapping("/add_token")
+    public ResponseEntity<?> addToken(@RequestParam String pIdUser) {
+
+        this.userService.addConfirmationToken(pIdUser);
+        ApiResponse<UserEntity> response = new ApiResponse<>(
+        "Token creado!", 
+        null
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
     @PutMapping("/modify")
-    public ResponseEntity<?> modifyUser(@RequestBody UserDTOModify pUser) {
+    public ResponseEntity<?> modifyUser(@RequestBody ModifyUserDTO pUser) {
 
         UserEntity myUser = this.userService.modify(pUser);
         ApiResponse<UserEntity> response = new ApiResponse<>(
@@ -228,6 +254,19 @@ public class UserController {
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+
+    @PostMapping("/confirm_email")
+    public ResponseEntity<?> confirmEmail(@RequestBody ConfirmEmailDTO pDTO) {
+
+        this.userService.confirmEmail(pDTO);
+        ApiResponse<UserEntity> response = new ApiResponse<>(
+        "Email confirmado!",
+        null
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
@@ -253,6 +292,18 @@ public class UserController {
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUser(@RequestParam String pIdUser) {
+
+        this.userService.deleteUser(pIdUser);
+        ApiResponse<UserEntity> response = new ApiResponse<>(
+        "Usuario eliminado!", 
+        null
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }

@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gomistar.proyecto_gomistar.DTO.email.EmailDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.ConfirmEmailDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTO;
-import com.gomistar.proyecto_gomistar.DTO.request.UserDTOModify;
 import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserPasswordDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CreateUserDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.ViewUserDTO;
 import com.gomistar.proyecto_gomistar.exception.RequestException;
 import com.gomistar.proyecto_gomistar.model.email.ConfirmationTokenEntity;
@@ -59,6 +59,13 @@ public class UserService {
             listRole.add(myRoleEntity);
         }
         return listRole;
+    }
+
+    public boolean isConfirmed(String pIdUser) {
+
+        UserEntity myUser = this.getUser(pIdUser);
+
+        return myUser.isConfirmed();
     }
 
     public UserEntity createUser(CreateUserDTO pDTO) {
@@ -229,14 +236,13 @@ public class UserService {
 
         if(checkEmail(pUser.email()) && checkUsername(pUser.username())) {
             
-        
-
         String password = this.passwordEncoder.encode(pUser.password());
 
-
-       UserEntity myUser = UserEntity.builder().email(pUser.email())
+        UserEntity myUser = UserEntity.builder().email(pUser.email())
                                                 .password(password)
                                                 .username(pUser.username())
+                                                .name(pUser.name())
+                                                .lastname(pUser.lastname())
                                                 .roles(roleList)
                                                 .isConfirmed(false)
                                                 .build();
@@ -300,7 +306,7 @@ public class UserService {
 
     }
 
-    public UserEntity modify(UserDTOModify pUser) {
+    public UserEntity modify(ModifyUserDTO pUser) {
 
         Optional<UserEntity> myUserOptional = this.userRepository.findById(Long.parseLong(pUser.id()));
 
@@ -310,9 +316,14 @@ public class UserService {
 
         UserEntity myUser = myUserOptional.get();
 
+        Set<RoleEntity> listRoles = this.obtainRoles(pUser.roles());
+
         myUser.setEmail(pUser.email());
         myUser.setUsername(pUser.username());
         myUser.setPassword(pUser.password());
+        myUser.setName(pUser.name());
+        myUser.setLastname(pUser.lastname());
+        myUser.setRoles(listRoles);
 
         this.userRepository.save(myUser);
 
