@@ -119,7 +119,7 @@ public class CargoShipService {
 
         for(UserEntity user : usersList) {
 
-            UserEmployeeResponseDTO myDTO = new UserEmployeeResponseDTO(String.valueOf(user.getId()), user.getUsername(), user.getPassword(), user.getEmail(), user.getEmployee().getName(), user.getEmployee().getLastName());
+            UserEmployeeResponseDTO myDTO = new UserEmployeeResponseDTO(String.valueOf(user.getId()), user.getUsername(), user.getPassword(), user.getEmail(), user.getName(), user.getLastname());
             listDTO.add(myDTO);
         }
 

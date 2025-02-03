@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gomistar.proyecto_gomistar.DTO.request.ConfirmEmailDTO;
-import com.gomistar.proyecto_gomistar.DTO.request.UserDTOModify;
 import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ChangePasswordDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserPasswordDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CreateUserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.ModifyUserDTO;
@@ -209,18 +210,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-   // @PostMapping("/checkUsername")
-   // public ResponseEntity<?> checkUserUsername(@RequestBody CheckUserUsernameDTO pDTO) {
-        
-       // boolean myUsernameExist = this.userService.checkUsername(pDTO);
-       // ApiResponse<Boolean> response = new ApiResponse<>(
-       //     "Username disponible!",
-        //    myUsernameExist
-        //);
-
-       // return ResponseEntity.status(HttpStatus.OK).body(response);
-    //}
-
     @PostMapping("/add_document")
     public ResponseEntity<?> addDocument(@RequestParam String pIdUser, @RequestParam MultipartFile pFile, @RequestParam LocalDate pDate, @RequestParam String pNumber) throws NumberFormatException, IOException {
         
@@ -263,6 +252,18 @@ public class UserController {
         this.userService.confirmEmail(pDTO);
         ApiResponse<UserEntity> response = new ApiResponse<>(
         "Email confirmado!",
+        null
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping("/change_password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO pDTO) {
+
+        this.userService.changePassword(pDTO);
+        ApiResponse<UserEntity> response = new ApiResponse<>(
+        "¡Contraseña cambiada correctamente!",
         null
         );
 

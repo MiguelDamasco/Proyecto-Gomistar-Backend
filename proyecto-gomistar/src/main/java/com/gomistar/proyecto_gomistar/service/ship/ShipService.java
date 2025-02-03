@@ -185,7 +185,6 @@ public class ShipService {
         return this.cargoShipService.modifyCargoShip(pDTO);
     }
 
-
     public PassengerShipEntity cargoShipToPassengerShip(ModifyPassengerShipDTO pDTO, List<UserEntity> userList) {
 
         PassengerShipEntity myShip = PassengerShipEntity.builder().build();
