@@ -67,7 +67,7 @@ public class PassengerShipController {
 
         PassengerShipEntity myShip = this.passengerShipService.savePassengerShip(pDTO);
         ApiResponse<PassengerShipEntity> response = new ApiResponse<PassengerShipEntity>(
-        "Barco de pasajeros creado con exito!", 
+        "¡Barco de pasajeros creado con éxito!", 
         myShip);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -78,7 +78,7 @@ public class PassengerShipController {
 
         PassengerShipEntity myShip = this.passengerShipService.modiftPassengerShip(pDTO);
         ApiResponse<PassengerShipEntity> response = new ApiResponse<PassengerShipEntity>(
-            "Barco de pasajeros modificado con exito!",
+            "¡Barco de pasajeros modificado con éxito!",
             myShip
         );
 
@@ -90,7 +90,7 @@ public class PassengerShipController {
 
         AbstractShip myShip = this.shipService.modifyShip(pDTO);
         ApiResponse<AbstractShip> response = new ApiResponse<>(
-"Barco Modificado con exito!",
+"¡Barco Modificado con éxito!",
         myShip
         );
 
@@ -101,7 +101,7 @@ public class PassengerShipController {
     public ResponseEntity<?> deletePassengerShip(@RequestParam String pId) {
         this.passengerShipService.deletePassengerShip(pId);
         ApiResponse<PassengerShipEntity> response = new ApiResponse<PassengerShipEntity>(
-            "Barco de pasajeros eliminado con exito!",
+            "¡Barco de pasajeros eliminado con éxito!",
             null);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -112,7 +112,7 @@ public class PassengerShipController {
 
         this.passengerShipService.removeUserFromPassengerShip(pIdUser, pIdShip);
         ApiResponse<UserEntity> response = new ApiResponse<>(
-            "Tripulante removido!", 
+            "¡Tripulante removido!", 
             null
             );
 
@@ -124,7 +124,7 @@ public class PassengerShipController {
         
         this.passengerShipService.addEmployeesToPassenger(pDTO);
         ApiResponse<AbstractShip> response = new ApiResponse<>(
-            "Tripulantes vinculados con exito!",
+            "¡Tripulante vinculados con éxito!",
              null);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);

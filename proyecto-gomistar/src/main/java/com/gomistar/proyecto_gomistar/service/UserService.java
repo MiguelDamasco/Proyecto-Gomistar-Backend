@@ -14,6 +14,7 @@ import com.gomistar.proyecto_gomistar.DTO.email.EmailDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.ConfirmEmailDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.UserDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ChangeEmailDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.ChangePasswordDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserPasswordDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CreateUserDTO;
@@ -340,7 +341,15 @@ public class UserService {
         myUser.setPassword(newPassword);
 
         this.userRepository.save(myUser);
-        
+    }
+
+    public void changeEmail(ChangeEmailDTO pDTO) {
+
+        UserEntity myUser = this.getUser(pDTO.idUser());
+
+        myUser.setEmail(pDTO.email());
+
+        this.userRepository.save(myUser);
     }
 
     public void deleteUser(String pId) {

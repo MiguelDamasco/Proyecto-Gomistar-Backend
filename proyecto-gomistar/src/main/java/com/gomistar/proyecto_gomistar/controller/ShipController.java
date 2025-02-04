@@ -48,8 +48,6 @@ public class ShipController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    
-
     @GetMapping("/amount_documents")
     public ResponseEntity<?> getAmountDocuments(@RequestParam String pId) {
 
@@ -77,9 +75,10 @@ public class ShipController {
     public ResponseEntity<?> deleteShip(@RequestBody DeleteShipDTO pDTO) {
         
         this.shipService.deleteShip(pDTO);
-        String myMessage = "Embarcación de " + (Integer.parseInt(pDTO.type()) == 1 ? "carga" : "pasajeros") + " eliminada con exito!";
-        ApiResponse<AbstractShip> response = new ApiResponse<>(myMessage,
-         null);
+        String myMessage = "¡Embarcación de " + (Integer.parseInt(pDTO.type()) == 1 ? "carga" : "pasajeros") + " eliminada con éxito!";
+        ApiResponse<AbstractShip> response = new ApiResponse<>(
+        myMessage,
+        null);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

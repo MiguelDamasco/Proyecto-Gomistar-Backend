@@ -55,7 +55,7 @@ public class CargoShipController {
 
         CargoShipEntity myCargoShip = this.cargoShipService.saveCargoShip(pDTO);
         ApiResponse<CargoShipEntity> response = new ApiResponse<CargoShipEntity>(
-            "Barco de carga creado!",
+            "¡Barco de carga creado!",
              myCargoShip
              );
 
@@ -66,7 +66,7 @@ public class CargoShipController {
     public ResponseEntity<?> addUserToCargoShip(@RequestBody AddUserToShipDTO pDTO) {
         CargoShipEntity myShip = this.cargoShipService.addUser(pDTO);
         ApiResponse<CargoShipEntity> response = new ApiResponse<>(
-            "Usuario agregado con exito!",
+            "¡Usuario agregado con éxito!",
              myShip
              );
 
@@ -78,7 +78,7 @@ public class CargoShipController {
 
         CargoShipEntity myShip = this.cargoShipService.modifyCargoShip(pDTO);
         ApiResponse<CargoShipEntity> response = new ApiResponse<>(
-        "Barco de carga modificado!",
+        "¡Barco de carga modificado!",
         myShip
         );
 
@@ -91,7 +91,7 @@ public class CargoShipController {
 
         AbstractShip myShip = this.shipService.modifyShip(pDTO);
         ApiResponse<AbstractShip> response = new ApiResponse<>(
-"Barco Modificado con exito!",
+"¡Barco Modificado con éxito!",
         myShip
         );
 
@@ -116,7 +116,7 @@ public class CargoShipController {
 
         this.shipService.removeUserFromCargoShip(pIdUser, pIdShip);
         ApiResponse<UserEntity> response = new ApiResponse<>(
-            "Tripulante removido!", 
+            "¡Tripulante removido!", 
             null
             );
 
@@ -128,7 +128,7 @@ public class CargoShipController {
         
         this.shipService.addEmployeesToCargoShip(pDTO);
         ApiResponse<AbstractShip> response = new ApiResponse<>(
-            "Tripulantes vinculados con exito!",
+            "¡Tripulantes vinculados con éxito!",
              null);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);

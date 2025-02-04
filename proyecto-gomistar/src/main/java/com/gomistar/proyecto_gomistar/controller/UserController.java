@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.gomistar.proyecto_gomistar.DTO.request.ConfirmEmailDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.getIdUserDTO;
+import com.gomistar.proyecto_gomistar.DTO.request.user.ChangeEmailDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.ChangePasswordDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CheckUserPasswordDTO;
 import com.gomistar.proyecto_gomistar.DTO.request.user.CreateUserDTO;
@@ -264,6 +265,18 @@ public class UserController {
         this.userService.changePassword(pDTO);
         ApiResponse<UserEntity> response = new ApiResponse<>(
         "¡Contraseña cambiada correctamente!",
+        null
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping("/change_email")
+    public ResponseEntity<?> changeEmail(@RequestBody ChangeEmailDTO pDTO) {
+
+        this.userService.changeEmail(pDTO);
+        ApiResponse<UserEntity> response = new ApiResponse<>(
+        "¡Email cambiado correctamente!", 
         null
         );
 
