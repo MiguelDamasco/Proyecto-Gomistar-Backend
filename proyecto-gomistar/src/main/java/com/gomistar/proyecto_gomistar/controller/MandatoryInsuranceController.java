@@ -71,7 +71,7 @@ public class MandatoryInsuranceController {
     public ResponseEntity<?> addDocument(@RequestParam String idShip, @RequestParam MultipartFile file, @RequestParam LocalDate date, @RequestParam String number) throws NumberFormatException, IOException {
         
         this.documentShipService.addDocument(idShip, file, date, Byte.parseByte(number));
-        ApiResponse<MandatoryInsuranceEntity> response = new ApiResponse<>("Documento añadido con exito!",
+        ApiResponse<MandatoryInsuranceEntity> response = new ApiResponse<>("¡Documento añadido con éxito!",
         null
         );
 
@@ -82,7 +82,7 @@ public class MandatoryInsuranceController {
     public ResponseEntity<?> deleteDocument(@RequestParam String pIdShip, @RequestParam String pType) throws IOException {
 
         this.documentShipService.deleteMandatoryInsurance(pIdShip, pType);
-        ApiResponse<MandatoryInsuranceEntity> response = new ApiResponse<>("Documento eliminado!"
+        ApiResponse<MandatoryInsuranceEntity> response = new ApiResponse<>("¡Documento eliminado!"
         , null
         );
 

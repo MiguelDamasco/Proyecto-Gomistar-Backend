@@ -60,7 +60,7 @@ public class CertificateNavigabilityController {
     public ResponseEntity<?> createBoatRegistrationController(@RequestParam MultipartFile file, @RequestParam LocalDate date) throws IOException {
 
         CertificateNavigabilityEntity myDocument = this.certificateNavigabilityService.createCertificateNavigability(file, date);
-        ApiResponse<CertificateNavigabilityEntity> response = new ApiResponse<>("Certificado de navegabilidad creado!",
+        ApiResponse<CertificateNavigabilityEntity> response = new ApiResponse<>("¡Certificado de navegabilidad creado!",
         myDocument
         );
 
@@ -71,7 +71,7 @@ public class CertificateNavigabilityController {
     public ResponseEntity<?> addDocument(@RequestParam String idShip, @RequestParam MultipartFile file, @RequestParam LocalDate date, @RequestParam String number) throws NumberFormatException, IOException {
         
         this.documentShipService.addDocument(idShip, file, date, Byte.parseByte(number));
-        ApiResponse<CertificateNavigabilityEntity> response = new ApiResponse<>("Documento añadido con exito!",
+        ApiResponse<CertificateNavigabilityEntity> response = new ApiResponse<>("¡Documento añadido con exito!",
         null
         );
 
@@ -82,7 +82,7 @@ public class CertificateNavigabilityController {
     public ResponseEntity<?> deleteDocument(@RequestParam String pIdShip, @RequestParam String pType) throws IOException {
 
         this.documentShipService.deleteCertificateNavigability(pIdShip, pType);
-        ApiResponse<CertificateNavigabilityEntity> response = new ApiResponse<CertificateNavigabilityEntity>("Documento eliminado!"
+        ApiResponse<CertificateNavigabilityEntity> response = new ApiResponse<CertificateNavigabilityEntity>("¡Documento eliminado!"
         , null
         );
 

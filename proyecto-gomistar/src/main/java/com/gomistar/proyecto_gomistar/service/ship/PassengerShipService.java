@@ -106,7 +106,7 @@ public class PassengerShipService {
 
         for(UserEntity user : usersList) {
 
-            UserEmployeeResponseDTO myDTO = new UserEmployeeResponseDTO(String.valueOf(user.getId()), user.getUsername(), user.getPassword(), user.getEmail(), "prueba", "prueba");
+            UserEmployeeResponseDTO myDTO = new UserEmployeeResponseDTO(String.valueOf(user.getId()), user.getUsername(), user.getPassword(), user.getEmail(), user.getName(), user.getLastname());
             listDTO.add(myDTO);
         }
 

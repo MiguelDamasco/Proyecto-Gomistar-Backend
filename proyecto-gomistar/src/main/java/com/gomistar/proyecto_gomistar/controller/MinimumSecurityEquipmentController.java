@@ -60,7 +60,7 @@ public class MinimumSecurityEquipmentController {
     public ResponseEntity<?> createMinimumSecurityEquipment(@RequestParam MultipartFile file, @RequestParam LocalDate date) throws IOException {
 
         MinimumSecurityEquipmentEntity myDocument = this.minimumSecurityEquipmentService.createMinimumSecurityEquipment(file, date);
-        ApiResponse<MinimumSecurityEquipmentEntity> response = new ApiResponse<>("documento creado!",
+        ApiResponse<MinimumSecurityEquipmentEntity> response = new ApiResponse<>("¡Documento creado!",
         myDocument
         );
 
@@ -71,7 +71,7 @@ public class MinimumSecurityEquipmentController {
     public ResponseEntity<?> addDocument(@RequestParam String idShip, @RequestParam MultipartFile file, @RequestParam LocalDate date, @RequestParam String number) throws NumberFormatException, IOException {
         
         this.documentShipService.addDocument(idShip, file, date, Byte.parseByte(number));
-        ApiResponse<MinimumSecurityEquipmentEntity> response = new ApiResponse<>("Documento añadido con exito!",
+        ApiResponse<MinimumSecurityEquipmentEntity> response = new ApiResponse<>("¡Documento añadido con exito!",
         null
         );
 
@@ -82,7 +82,7 @@ public class MinimumSecurityEquipmentController {
     public ResponseEntity<?> deleteDocument(@RequestParam String pIdShip, @RequestParam String pType) throws IOException {
 
         this.documentShipService.deleteMinimumSecurityEquipment(pIdShip, pType);
-        ApiResponse<MinimumSecurityEquipmentEntity> response = new ApiResponse<>("Documento eliminado!"
+        ApiResponse<MinimumSecurityEquipmentEntity> response = new ApiResponse<>("¡Documento eliminado!"
         , null
         );
 

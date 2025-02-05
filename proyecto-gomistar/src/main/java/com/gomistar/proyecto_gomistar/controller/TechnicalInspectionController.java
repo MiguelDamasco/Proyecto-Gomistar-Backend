@@ -61,7 +61,7 @@ public class TechnicalInspectionController {
     public ResponseEntity<?> createBoatRegistrationController(@RequestParam MultipartFile file, @RequestParam LocalDate date) throws IOException {
 
         TechnicalInspectionEntity myDocument = this.technicalInspectionService.createTechnicalInspection(file, date);
-        ApiResponse<TechnicalInspectionEntity> response = new ApiResponse<>("Certificado de navegabilidad creado!",
+        ApiResponse<TechnicalInspectionEntity> response = new ApiResponse<>("¡Certificado de navegabilidad creado!",
         myDocument
         );
 
@@ -72,7 +72,7 @@ public class TechnicalInspectionController {
     public ResponseEntity<?> addDocument(@RequestParam String idShip, @RequestParam MultipartFile file, @RequestParam LocalDate date, @RequestParam String number) throws NumberFormatException, IOException {
         
         this.documentShipService.addDocument(idShip, file, date, Byte.parseByte(number));
-        ApiResponse<TechnicalInspectionEntity> response = new ApiResponse<>("Documento añadido con exito!",
+        ApiResponse<TechnicalInspectionEntity> response = new ApiResponse<>("¡Documento añadido con exito!",
         null
         );
 
@@ -83,7 +83,7 @@ public class TechnicalInspectionController {
     public ResponseEntity<?> deleteDocument(@RequestParam String pIdShip, @RequestParam String pType) throws IOException {
 
         this.documentShipService.deleteTechnicalInspection(pIdShip, pType);
-        ApiResponse<TechnicalInspectionEntity> response = new ApiResponse<>("Documento eliminado!"
+        ApiResponse<TechnicalInspectionEntity> response = new ApiResponse<>("¡Documento eliminado!"
         , null
         );
 
