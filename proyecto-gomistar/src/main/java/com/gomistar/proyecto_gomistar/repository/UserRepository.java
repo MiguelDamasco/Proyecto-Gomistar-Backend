@@ -7,7 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.gomistar.proyecto_gomistar.model.UserEntity;
+import com.gomistar.proyecto_gomistar.model.user.UserEntity;
+
 import java.util.List;
 
 
@@ -19,6 +20,9 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     boolean existsByEmail(String email);
 
     boolean existsByUsername(String username);
+
+    @Query("SELECT u.amountAlerts FROM UserEntity u WHERE u.id = :id")
+    Optional<Integer> getAmountAlerts(@Param("id") Long id);
 
     Optional<UserEntity> findByEmail(String email);
 
