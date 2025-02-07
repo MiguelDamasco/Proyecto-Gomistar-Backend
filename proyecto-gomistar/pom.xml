@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.gomistar</groupId>
 	<artifactId>proyecto-gomistar</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.</version>
 	<name>Sistema de gestion operativa y administrativa Gomistar.</name>
 	<description>Una API RESTful para gestionar empleados y embarcaciones junto a sus documentos.</description>
 	<url/>

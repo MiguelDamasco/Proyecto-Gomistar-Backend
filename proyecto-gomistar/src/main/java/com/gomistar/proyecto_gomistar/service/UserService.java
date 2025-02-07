@@ -219,9 +219,9 @@ public class UserService {
 
         this.userRepository.save(myUser);
 
-        String subject = "Confirmación de correo electronico";
+        String subject = "Confirmación de correo electrónico";
 
-        String message = "Clave: " + myConfirmationToken.getToken();
+        String message = "Clave: " + myConfirmationToken.getToken() + " expirará dentro de 60 minutos." ;
 
         EmailDTO myDTO = new EmailDTO(myUser.getEmail(), subject, message);
 

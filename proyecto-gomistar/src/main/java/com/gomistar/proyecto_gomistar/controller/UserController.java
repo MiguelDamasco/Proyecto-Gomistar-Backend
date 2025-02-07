@@ -199,6 +199,18 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @GetMapping("/alerts_user")
+    public ResponseEntity<?> getAlertsUser(@RequestParam String pIdUser) {
+
+        List<ViewAlertDTO> myList = this.alertService.getAlertsUser(pIdUser);
+        ApiResponse<List<ViewAlertDTO>> response = new ApiResponse<>(
+        "Lista de alertas",
+        myList
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @PostMapping("/checkPassword")
     public ResponseEntity<?> checkUserPassword(@RequestBody CheckUserPasswordDTO pDTO) {
 

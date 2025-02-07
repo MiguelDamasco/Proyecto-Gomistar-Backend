@@ -3,11 +3,9 @@ package com.gomistar.proyecto_gomistar.service.email;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.gomistar.proyecto_gomistar.DTO.email.EmailDTO;
 import com.gomistar.proyecto_gomistar.model.email.ConfirmationTokenEntity;
 import com.gomistar.proyecto_gomistar.model.user.UserEntity;
 import com.gomistar.proyecto_gomistar.repository.ConfirmationTokenRepository;

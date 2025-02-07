@@ -36,7 +36,7 @@ public class EmailService {
 
         Context context = new Context();
         context.setVariable("message", pDTO.message());
-        context.setVariable("title", "Primera prueba");
+        context.setVariable("title", "Gomistar S.A.");
         String contentHTML = templateEngine.process("email", context);
 
         helper.setText(contentHTML, true);
